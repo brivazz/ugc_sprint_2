@@ -1,0 +1,72 @@
+name: UGC_service_2
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        python-version: [ 3.7, 3.8, 3.9 ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies on Python ${{ matrix.python-version }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install wemake-python-styleguide flake8-html mypy
+
+      - name: Run Linters
+        id: run_linters
+        run: flake8 --format=html --htmldir=flake-report .
+        continue-on-error: true
+
+      - name: Run MyPy
+        id: run_mypy
+        run: mypy .
+        continue-on-error: true
+
+      - name: save HTML
+        uses: actions/upload-artifact@v2
+        continue-on-error: true
+        with:
+          name: flake-report
+          path: flake-report/
+
+      - name: Fail if errors found
+        run: |
+          if [ "${{ steps.run_linters.outcome }}" == "failure" ]; then
+            echo "Linting errors found. Exiting with error."
+            exit 1
+          fi
+          if [ "${{ steps.run_mypy.outcome }}" == "failure" ]; then
+            echo "MyPy errors found. Exiting with error."
+            exit 1
+          fi
+
+      - name: Telegram Notification
+        if: cancelled() == false
+        uses: appleboy/telegram-action@master
+        continue-on-error: true
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          args: |
+            NEW PR from: ${{ github.actor }}
+            Branch name: ${{ github.ref }}
+            status: ${{ job.status }}
+            Python version: ${{ matrix.python-version }}
+

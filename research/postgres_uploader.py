@@ -17,7 +17,7 @@ class PostgresConfig(BaseConfig):
         env_file = ".env"
         env_prefix = "POSTGRES_"
 
-BATCH_SIZE = 10000
+BATCH_SIZE = 10_000
 USER_FILM_RATINGS_TABLE = "ratings"
 REVIEWS_TABLE = "reviews"
 BOOKMARKS_TABLE = "bookmarks"
@@ -155,21 +155,21 @@ def bookmarks_insert(num):
 
 
 def main():
-    num_elements = 15 * 1000000
+    num_elements = 15 * 1_000_000
 
     global config
     config = PostgresConfig()
 
     create_tables()
 
-    user_film_insert(5 * 1000000)
+    user_film_insert(5 * 1_000_000)
     print(f"Data is inserted to table {USER_FILM_RATINGS_TABLE}")
     reviews_insert(5 * 1000000)
     print(f"Data is inserted to table {REVIEWS_TABLE}")
     bookmarks_insert(num_elements)
     print(f"Data is inserted to table {BOOKMARKS_TABLE}")
 
-    print(f"Data insertion completed successfully!")
+    print("Data insertion completed successfully!")
 
     user_film_ratings_count, reviews_count, bookmarks_count = get_table_counts()
     print(f"Table '{USER_FILM_RATINGS_TABLE}' count: {user_film_ratings_count}")

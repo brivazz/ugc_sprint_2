@@ -36,7 +36,7 @@ def generate_rating():
 
 
 def generate_timestamp():
-    return datetime.datetime.utcnow()
+    return datetime.datetime.now(datetime.timezone.utc)
 
 
 def create_user_film_ratings(num_elements):

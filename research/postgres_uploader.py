@@ -1,5 +1,3 @@
-from typing import List
-
 import psycopg2
 from pydantic import BaseConfig
 
@@ -79,7 +77,7 @@ def create_tables():
     conn.close()
 
 
-def insert_data_into_table(table_name, data: List[dict]):
+def insert_data_into_table(table_name, data: list[dict]):
     conn = psycopg2.connect(
         host=config.PG_HOST,
         port=config.PG_PORT,
@@ -127,31 +125,25 @@ def get_table_counts():
 
 def user_film_insert(num):
     user_film_ratings = create_user_film_ratings(num)
-    counter = 1
-    for batch in create_batch(user_film_ratings, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(user_film_ratings, BATCH_SIZE), start=1):
         insert_data_into_table(USER_FILM_RATINGS_TABLE, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
 
 
 
 def reviews_insert(num):
     reviews = create_reviews(num)
-    counter = 1
-    for batch in create_batch(reviews, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(reviews, BATCH_SIZE), start=1):
         insert_data_into_table(REVIEWS_TABLE, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
 
 
 
 def bookmarks_insert(num):
     bookmarks = create_bookmarks(num)
-    counter = 1
-    for batch in create_batch(bookmarks, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(bookmarks, BATCH_SIZE), start=1):
         insert_data_into_table(BOOKMARKS_TABLE, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
 
 
 def main():
@@ -162,14 +154,16 @@ def main():
 
     create_tables()
 
-    user_film_insert(5 * 1_000_000)
+    user_film_insert(num_elements)
     print(f"Data is inserted to table {USER_FILM_RATINGS_TABLE}")
-    reviews_insert(5 * 1000000)
+
+    reviews_insert(num_elements)
     print(f"Data is inserted to table {REVIEWS_TABLE}")
+
     bookmarks_insert(num_elements)
     print(f"Data is inserted to table {BOOKMARKS_TABLE}")
 
-    print("Data insertion completed successfully!")
+    print(f"{20 * '='}\nData insertion completed successfully!")
 
     user_film_ratings_count, reviews_count, bookmarks_count = get_table_counts()
     print(f"Table '{USER_FILM_RATINGS_TABLE}' count: {user_film_ratings_count}")

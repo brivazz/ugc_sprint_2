@@ -1,5 +1,3 @@
-from typing import List
-
 import pymongo
 from pydantic import BaseConfig
 
@@ -14,7 +12,7 @@ class MongoDBConfig(BaseConfig):
         env_file = ".env"
         env_prefix = "MONGODB_"
 
-BATCH_SIZE = 10000
+BATCH_SIZE = 10_000
 USER_FILM_RATINGS_COLLECTION = "user_film_ratings"
 REVIEWS_COLLECTION = "reviews"
 BOOKMARKS_COLLECTION = "bookmarks"
@@ -32,7 +30,6 @@ def create_batch(iterable, n=1):
 def create_collections():
     client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
     database = client[config.DATABASE_NAME]
-    client = pymongo.MongoClient()
 
     if USER_FILM_RATINGS_COLLECTION not in database.list_collection_names():
         database.create_collection(USER_FILM_RATINGS_COLLECTION)
@@ -53,7 +50,7 @@ def create_collections():
         database[BOOKMARKS_COLLECTION].create_index([("user_id", pymongo.ASCENDING)])
 
 
-def insert_data_into_collection(collection_name, data: List[dict]):
+def insert_data_into_collection(collection_name, data: list[dict]):
     client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
     database = client[config.DATABASE_NAME]
     collection = database[collection_name]
@@ -70,35 +67,30 @@ def get_collection_counts():
 
     return user_film_ratings_count, reviews_count, bookmarks_count
 
+
 def user_film_insert(num):
     user_film_ratings = create_user_film_ratings(num)
-    counter = 1
-    for batch in create_batch(user_film_ratings, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(user_film_ratings, BATCH_SIZE), start=1):
         insert_data_into_collection(USER_FILM_RATINGS_COLLECTION, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
-
 
 
 def reviews_insert(num):
     reviews = create_reviews(num)
-    counter = 1
-    for batch in create_batch(reviews, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(reviews, BATCH_SIZE), start=1):
         insert_data_into_collection(REVIEWS_COLLECTION, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
 
 
 def bookmarks_insert(num):
     bookmarks = create_bookmarks(num)
-    counter = 1
-    for batch in create_batch(bookmarks, BATCH_SIZE):
+    for counter, batch in enumerate(create_batch(bookmarks, BATCH_SIZE), start=1):
         insert_data_into_collection(BOOKMARKS_COLLECTION, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-        counter += 1
+
 
 def main():
-    num_elements = 15 * 1000000
+    num_elements = 15 * 1_000_000
 
     global config
     config = MongoDBConfig()
@@ -109,7 +101,7 @@ def main():
     reviews_insert(num_elements)
     bookmarks_insert(num_elements)
 
-    print(f"Data insertion completed successfully!")
+    print(f"{20 * '='}\nData insertion completed successfully!")
 
     user_film_ratings_count, reviews_count, bookmarks_count = get_collection_counts()
     print(

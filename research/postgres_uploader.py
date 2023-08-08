@@ -15,10 +15,12 @@ class PostgresConfig(BaseConfig):
         env_file = ".env"
         env_prefix = "POSTGRES_"
 
+
 BATCH_SIZE = 10_000
 USER_FILM_RATINGS_TABLE = "ratings"
 REVIEWS_TABLE = "reviews"
 BOOKMARKS_TABLE = "bookmarks"
+
 
 def create_batch(iterable, n=1):
     batch = []
@@ -29,6 +31,7 @@ def create_batch(iterable, n=1):
             batch = []
     if batch:
         yield batch
+
 
 def create_tables():
     conn = psycopg2.connect(
@@ -130,13 +133,11 @@ def user_film_insert(num):
         print(BATCH_SIZE * counter, "rows inserted")
 
 
-
 def reviews_insert(num):
     reviews = create_reviews(num)
     for counter, batch in enumerate(create_batch(reviews, BATCH_SIZE), start=1):
         insert_data_into_table(REVIEWS_TABLE, [item.__dict__ for item in batch])
         print(BATCH_SIZE * counter, "rows inserted")
-
 
 
 def bookmarks_insert(num):

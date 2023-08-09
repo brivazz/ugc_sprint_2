@@ -1,11 +1,11 @@
 # Use root/example as user/password credentials
-version: '3.1'
+version: '3.8'
 
 services:
 
   mongo:
-    image: mongo
-    restart: always
+    image: mongo:4.4.23-rc0-focal
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -20,8 +20,8 @@ services:
       - "27017:27017"
 
   mongo-express:
-    image: mongo-express
-    restart: always
+    image: mongo-express:1.0.0-alpha.4
+    restart: unless-stopped
     ports:
       - 8081:8081
     environment:

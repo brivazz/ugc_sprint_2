@@ -1,21 +1,23 @@
 name: UGC_service_2
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+
     runs-on: ubuntu-latest
+
     continue-on-error: true
     strategy:
       matrix:
         python-version: [ 3.7, 3.8, 3.9 ]
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
 
@@ -52,6 +54,7 @@ jobs:
             echo "Linting errors found. Exiting with error."
             exit 1
           fi
+
           if [ "${{ steps.run_mypy.outcome }}" == "failure" ]; then
             echo "MyPy errors found. Exiting with error."
             exit 1
@@ -63,10 +66,9 @@ jobs:
         continue-on-error: true
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          args: |
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
             NEW PR from: ${{ github.actor }}
             Branch name: ${{ github.ref }}
             status: ${{ job.status }}
             Python version: ${{ matrix.python-version }}
-

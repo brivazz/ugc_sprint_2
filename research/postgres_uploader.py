@@ -128,8 +128,12 @@ def get_table_counts():
 
 def user_film_insert(num):
     user_film_ratings = create_user_film_ratings(num)
-    for counter, batch in enumerate(create_batch(user_film_ratings, BATCH_SIZE), start=1):
-        insert_data_into_table(USER_FILM_RATINGS_TABLE, [item.__dict__ for item in batch])
+    for counter, batch in enumerate(
+        create_batch(user_film_ratings, BATCH_SIZE), start=1
+    ):
+        insert_data_into_table(
+            USER_FILM_RATINGS_TABLE, [item.__dict__ for item in batch]
+        )
         print(BATCH_SIZE * counter, "rows inserted")
 
 

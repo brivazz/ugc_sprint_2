@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Linters
         id: run_linters
-        run: flake8 --format=html --htmldir=flake-report .
+        run: flake8 --max-line-length=120 --format=html --htmldir=flake-report .
         continue-on-error: true
 
       - name: Run MyPy

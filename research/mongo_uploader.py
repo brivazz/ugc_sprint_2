@@ -12,10 +12,12 @@ class MongoDBConfig(BaseConfig):
         env_file = ".env"
         env_prefix = "MONGODB_"
 
+
 BATCH_SIZE = 10_000
 USER_FILM_RATINGS_COLLECTION = "user_film_ratings"
 REVIEWS_COLLECTION = "reviews"
 BOOKMARKS_COLLECTION = "bookmarks"
+
 
 def create_batch(iterable, n=1):
     batch = []
@@ -27,6 +29,7 @@ def create_batch(iterable, n=1):
     if batch:
         yield batch
 
+
 def create_collections():
     client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
     database = client[config.DATABASE_NAME]
@@ -34,19 +37,33 @@ def create_collections():
     if USER_FILM_RATINGS_COLLECTION not in database.list_collection_names():
         database.create_collection(USER_FILM_RATINGS_COLLECTION)
         # client.admin.command('enableSharding', config.DATABASE_NAME)
-        client.admin.command('shardCollection', f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}", key={'_id': 'hashed'})
-        database[USER_FILM_RATINGS_COLLECTION].create_index([("film_id", pymongo.ASCENDING)])
+        client.admin.command(
+            "shardCollection",
+            f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}",
+            key={"_id": "hashed"},
+        )
+        database[USER_FILM_RATINGS_COLLECTION].create_index(
+            [("film_id", pymongo.ASCENDING)]
+        )
 
     if REVIEWS_COLLECTION not in database.list_collection_names():
         database.create_collection(REVIEWS_COLLECTION)
         # client.admin.command('enableSharding', config.DATABASE_NAME)
-        client.admin.command('shardCollection', f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}", key={'_id': 'hashed'})
+        client.admin.command(
+            "shardCollection",
+            f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}",
+            key={"_id": "hashed"},
+        )
         database[REVIEWS_COLLECTION].create_index([("film_id", pymongo.ASCENDING)])
 
     if BOOKMARKS_COLLECTION not in database.list_collection_names():
         database.create_collection(BOOKMARKS_COLLECTION)
         # client.admin.command('enableSharding', config.DATABASE_NAME)
-        client.admin.command('shardCollection', f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}", key={'_id': 'hashed'})
+        client.admin.command(
+            "shardCollection",
+            f"{config.DATABASE_NAME}.{USER_FILM_RATINGS_COLLECTION}",
+            key={"_id": "hashed"},
+        )
         database[BOOKMARKS_COLLECTION].create_index([("user_id", pymongo.ASCENDING)])
 
 
@@ -70,22 +87,30 @@ def get_collection_counts():
 
 def user_film_insert(num):
     user_film_ratings = create_user_film_ratings(num)
-    for counter, batch in enumerate(create_batch(user_film_ratings, BATCH_SIZE), start=1):
-        insert_data_into_collection(USER_FILM_RATINGS_COLLECTION, [item.__dict__ for item in batch])
+    for counter, batch in enumerate(
+        create_batch(user_film_ratings, BATCH_SIZE), start=1
+    ):
+        insert_data_into_collection(
+            USER_FILM_RATINGS_COLLECTION, [item.__dict__ for item in batch]
+        )
         print(BATCH_SIZE * counter, "rows inserted")
 
 
 def reviews_insert(num):
     reviews = create_reviews(num)
     for counter, batch in enumerate(create_batch(reviews, BATCH_SIZE), start=1):
-        insert_data_into_collection(REVIEWS_COLLECTION, [item.__dict__ for item in batch])
+        insert_data_into_collection(
+            REVIEWS_COLLECTION, [item.__dict__ for item in batch]
+        )
         print(BATCH_SIZE * counter, "rows inserted")
 
 
 def bookmarks_insert(num):
     bookmarks = create_bookmarks(num)
     for counter, batch in enumerate(create_batch(bookmarks, BATCH_SIZE), start=1):
-        insert_data_into_collection(BOOKMARKS_COLLECTION, [item.__dict__ for item in batch])
+        insert_data_into_collection(
+            BOOKMARKS_COLLECTION, [item.__dict__ for item in batch]
+        )
         print(BATCH_SIZE * counter, "rows inserted")
 
 

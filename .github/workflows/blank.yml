@@ -33,7 +33,11 @@ jobs:
 
       - name: Run Linters
         id: run_linters
-        run: flake8 --max-line-length=120 --format=html --htmldir=flake-report .
+        run: flake8 --ignore=WPS305,I001,I005,WPS352,WPS421,WPS237,WPS306
+              --max-methods=14
+              --inline-quotes=double
+              --format=html
+              --htmldir=flake-report .
         continue-on-error: true
 
       - name: Run MyPy

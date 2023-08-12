@@ -50,7 +50,9 @@ jobs:
 
       - name: Run MyPy
         id: run_mypy
-        run: mypy --html-report --htmldir=mypy-report .
+        run: |
+            mkdir mypy-report
+            mypy --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report

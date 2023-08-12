@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies on Python ${{ matrix.python-version }}
         run: |
           python -m pip install --upgrade pip
-          pip install wemake-python-styleguide flake8-html mypy lxml
+          pip install wemake-python-styleguide flake8-html mypy mypy_json_reporting lxml
 
       - name: Run Linters
         id: run_linters
@@ -52,7 +52,7 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --show-error-codes --html-report mypy-report .
+            mypy --html-report mypy-report --show-error-codes --custom-plugin=mypy_json_reporting.plugin
         continue-on-error: true
 
       - name: Save mypy HTML report

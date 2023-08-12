@@ -43,7 +43,7 @@ class MongoUploader:
 
         Returns:
             pymongo.MongoClient: Объект MongoClient,
-            представляющий соединениес сервером MongoDB.
+            представляющий соединение с сервером MongoDB.
         """
         try:
             if self._client is None or not self._client.admin.command("ping"):
@@ -193,9 +193,8 @@ class MongoUploader:
         Returns:
             int: Количество документов в коллекции.
         """
-        database = self.get_database()
 
-        return database[collection_name].count_documents({})
+        return self.get_database()[collection_name].count_documents({})
 
     def ratings_insert(self, num: int) -> None:
         """

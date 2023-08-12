@@ -8,7 +8,8 @@ class MongoDBConfig(pydantic.BaseModel):
     # mongo_connection_string: str = "mongodb://root:example@mongo:27017/"
     db_name: str = "someDb"
 
-    num_elements: int = 10 # * 1_000_000
+    # num_elements: int = 15 * 1_000_000
+    num_elements: int = 10
     # batch_size: int = 10_000
     batch_size: int = 3
     film_ratings_collection: str = "film_ratings"

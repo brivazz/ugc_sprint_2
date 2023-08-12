@@ -1,23 +1,10 @@
 import time
 
 import pymongo
-from pydantic import BaseConfig
 
-from fake_data import create_user_film_ratings, create_reviews, create_bookmarks
+from config import mongo_cfg
+from fake_data import create_film_ratings, create_reviews, create_bookmarks
 
-
-class MongoDBConfig(BaseConfig):
-    MONGO_CONNECTION_STRING: str = "mongodb://localhost:27017/"
-    DATABASE_NAME: str = "someDb"
-
-    class Config:
-        env_file = ".env"
-        env_prefix = "MONGODB_"
-
-
-USER_FILM_RATINGS_COLLECTION = "ratings"
-REVIEWS_COLLECTION = "reviews"
-BOOKMARKS_COLLECTION = "bookmarks"
 
 
 def measure_execution_time(func):
@@ -33,8 +20,8 @@ def measure_execution_time(func):
 
 
 def measure_write_speed(collection_name, data):
-    client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
-    database = client[config.DATABASE_NAME]
+    client = pymongo.MongoClient(mongo_cfg.mongo_connection_string)
+    database = client[mongo_cfg.db_name]
     collection = database[collection_name]
 
     @measure_execution_time
@@ -45,9 +32,9 @@ def measure_write_speed(collection_name, data):
 
 
 def measure_likes_count():
-    client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
-    database = client[config.DATABASE_NAME]
-    collection = database[USER_FILM_RATINGS_COLLECTION]
+    client = pymongo.MongoClient(mongo_cfg.mongo_connection_string)
+    database = client[mongo_cfg.db_name]
+    collection = database[mongo_cfg.film_ratings_collection]
 
     @measure_execution_time
     def count_likes():
@@ -59,9 +46,9 @@ def measure_likes_count():
 
 
 def measure_average_rating(film_id):
-    client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
-    database = client[config.DATABASE_NAME]
-    collection = database[USER_FILM_RATINGS_COLLECTION]
+    client = pymongo.MongoClient(mongo_cfg.mongo_connection_string)
+    database = client[mongo_cfg.db_name]
+    collection = database[mongo_cfg.film_ratings_collection]
 
     @measure_execution_time
     def calculate_average_rating():
@@ -76,9 +63,9 @@ def measure_average_rating(film_id):
 
 
 def view_bookmarks_for_user(user_id):
-    client = pymongo.MongoClient(config.MONGO_CONNECTION_STRING)
-    database = client[config.DATABASE_NAME]
-    collection = database[BOOKMARKS_COLLECTION]
+    client = pymongo.MongoClient(mongo_cfg.mongo_connection_string)
+    database = client[mongo_cfg.db_name]
+    collection = database[mongo_cfg.bookmarks_collection]
 
     @measure_execution_time
     def get_user_bookmarks():
@@ -90,10 +77,7 @@ def view_bookmarks_for_user(user_id):
 def main():
     num_elements = 10
 
-    global config
-    config = MongoDBConfig()
-
-    user_film_ratings = list(create_user_film_ratings(num_elements))
+    user_film_ratings = list(create_film_ratings(num_elements))
     reviews = list(create_reviews(num_elements))
     bookmarks = list(create_bookmarks(num_elements))
 
@@ -101,9 +85,9 @@ def main():
     reviews_dicts = [item.__dict__ for item in reviews]
     bookmarks_dicts = [item.__dict__ for item in bookmarks]
 
-    measure_write_speed(USER_FILM_RATINGS_COLLECTION, user_film_ratings_dicts)
-    measure_write_speed(REVIEWS_COLLECTION, reviews_dicts)
-    measure_write_speed(BOOKMARKS_COLLECTION, bookmarks_dicts)
+    measure_write_speed(mongo_cfg.film_ratings_collection, user_film_ratings_dicts)
+    measure_write_speed(mongo_cfg.reviews_collection, reviews_dicts)
+    measure_write_speed(mongo_cfg.bookmarks_collection, bookmarks_dicts)
 
     likes_count_result = measure_likes_count()
     print("Likes count for each movie:")

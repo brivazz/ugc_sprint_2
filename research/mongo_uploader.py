@@ -125,7 +125,8 @@ class MongoUploader:
         - Если коллекция с указанным именем не существует,
         вызывается метод create_and_configure_collection() для ее создания.
         """
-        if database := self.get_database():
+        database = self.get_database()
+        if database:
             if collection_name not in database.list_collection_names():
                 self.create_and_configure_collection(
                     self.get_database(),

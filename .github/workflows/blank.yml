@@ -25,6 +25,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+        env:
+          NODE_VERSION: 16.x
 
       - name: Install dependencies on Python ${{ matrix.python-version }}
         run: |
@@ -47,12 +49,14 @@ jobs:
         with:
           name: flake-report
           path: flake-report/
+        env:
+          NODE_VERSION: 16.x
 
       - name: Run MyPy
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --show-error-codes --html-report mypy-report .
+            mypy --install-types --show-error-codes --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report
@@ -61,6 +65,8 @@ jobs:
         with:
           name: mypy-report
           path: mypy-report/
+        env:
+          NODE_VERSION: 16.x
 
       - name: Fail if errors found
         run: |

@@ -2,13 +2,13 @@ import time
 from typing import List
 
 import psycopg2
-from pydantic import BaseConfig
+from pydantic import BaseModel
 
 from config import postgres_cfg
 from fake_data import create_film_ratings, create_reviews, create_bookmarks
 
 
-class PostgresConfig(BaseConfig):
+class PostgresConfig(BaseModel):
     PG_HOST: str = "localhost"
     PG_PORT: int = 5433
     PG_DATABASE: str = "test_database"

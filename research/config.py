@@ -1,4 +1,4 @@
-import pydantic
+import pydantic # type: ignore
 
 
 class MongoDBConfig(pydantic.BaseModel):

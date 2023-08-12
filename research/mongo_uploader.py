@@ -1,5 +1,6 @@
 """Этот скрипт выполняет вставку данных в коллекции MongoDB."""
 
+import __future__
 import logging
 import typing
 
@@ -37,7 +38,7 @@ class MongoUploader:
         self._client = client
 
     @property
-    def mongo_conn(self) -> pymongo.MongoClient | None:
+    def mongo_conn(self) -> typing.Union[pymongo.MongoClient, None]:
         """
         Устанавливает соединение с сервером MongoDB.
 
@@ -64,7 +65,7 @@ class MongoUploader:
             self._config.mongo_connection_string,
         )
 
-    def get_database(self) -> pymongo.database.Database | None:
+    def get_database(self) -> typing.Union[pymongo.database.Database, None]:
         """
         Получает объект базы данных из текущего подключения к MongoDB.
 
@@ -176,7 +177,7 @@ class MongoUploader:
     def insert_data_into_collection(
         self,
         collection_name: str,
-        collection_data: list[dict],
+        collection_data: typing.List[dict],
     ) -> None:
         """
         Вставляет данные в коллекцию в MongoDB.
@@ -185,7 +186,8 @@ class MongoUploader:
             collection_name: Имя коллекции, в которую нужно вставить данные.
             collection_data: Список словарей с данными, которые нужно вставить.
         """
-        if database := self.get_database():
+        database = self.get_database()
+        if database:
             database[collection_name].insert_many(collection_data)
 
     def get_collection_counts(self, collection_name: str) -> int | None:

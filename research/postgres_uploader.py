@@ -1,3 +1,5 @@
+import typing
+
 import psycopg2
 
 from config import postgres_cfg
@@ -62,7 +64,7 @@ def create_tables():
     conn.close()
 
 
-def insert_data_into_table(table_name, data: list[dict]):
+def insert_data_into_table(table_name, data: typing.List[dict]):
     conn = psycopg2.connect(
         host=postgres_cfg.PG_HOST,
         port=postgres_cfg.PG_PORT,

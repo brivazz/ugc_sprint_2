@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies on Python ${{ matrix.python-version }}
         run: |
           python -m pip install --upgrade pip
-          pip install wemake-python-styleguide flake8-html mypy mypy[reports]
+          pip install wemake-python-styleguide flake8-html mypy lxml
 
       - name: Run Linters
         id: run_linters
@@ -41,17 +41,17 @@ jobs:
               --htmldir=flake-report .
         continue-on-error: true
 
-      - name: Run MyPy
-        id: run_mypy
-        run: mypy --html-report --htmldir=mypy-report .
-        continue-on-error: true
-
       - name: Save flake8 HTML report
         uses: actions/upload-artifact@v2
         continue-on-error: true
         with:
           name: flake-report
           path: flake-report/
+
+      - name: Run MyPy
+        id: run_mypy
+        run: mypy --html-report --htmldir=mypy-report .
+        continue-on-error: true
 
       - name: Save mypy HTML report
         uses: actions/upload-artifact@v2

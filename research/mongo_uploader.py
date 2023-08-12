@@ -201,7 +201,8 @@ class MongoUploader:
         Returns:
             int: Количество документов в коллекции.
         """
-        if database := self.get_database():
+        database = self.get_database()
+        if database:
             return database[collection_name].count_documents({})
         return None
 

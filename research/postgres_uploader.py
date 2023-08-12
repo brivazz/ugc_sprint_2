@@ -1,6 +1,6 @@
 import typing
 
-import psycopg2
+import psycopg2 # type: ignore
 
 from config import postgres_cfg
 from fake_data import create_film_ratings, create_reviews, create_bookmarks

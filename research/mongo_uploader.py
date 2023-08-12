@@ -4,7 +4,7 @@ import __future__
 import logging
 import typing
 
-import pymongo
+import pymongo # type: ignore
 
 from config import mongo_cfg, MongoDBConfig
 from fake_data import (
@@ -191,7 +191,7 @@ class MongoUploader:
         if database:
             database[collection_name].insert_many(collection_data)
 
-    def get_collection_counts(self, collection_name: str) -> int | None:
+    def get_collection_counts(self, collection_name: str) -> typing.Union[int, None]:
         """
         Возвращает количество документов в указанной коллекции.
 
@@ -260,7 +260,7 @@ class MongoUploader:
             logger.info(self._config.batch_size * count, "rows inserted")
 
 
-def main():
+def main() -> None:
     """Главная функция загрузки данных в MongoDB."""
     mongo_uploader = MongoUploader(config=mongo_cfg)
     mongo_uploader.create_collections()

@@ -1,6 +1,6 @@
 import time
 
-import pymongo
+import pymongo # type: ignore
 
 from config import mongo_cfg
 from fake_data import create_film_ratings, create_reviews, create_bookmarks

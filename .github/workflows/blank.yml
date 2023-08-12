@@ -43,7 +43,7 @@ jobs:
 
       - name: Run MyPy
         id: run_mypy
-        run: mypy --html-report .
+        run: mypy --html-report --htmldir=mypy-report .
         continue-on-error: true
 
       - name: Save flake8 HTML report

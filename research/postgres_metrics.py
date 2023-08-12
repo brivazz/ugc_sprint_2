@@ -4,7 +4,8 @@ from typing import List
 import psycopg2
 from pydantic import BaseConfig
 
-from fake_data import create_user_film_ratings, create_reviews, create_bookmarks
+from config import postgres_cfg
+from fake_data import create_film_ratings, create_reviews, create_bookmarks
 
 
 class PostgresConfig(BaseConfig):

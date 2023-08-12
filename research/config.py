@@ -17,4 +17,18 @@ class MongoDBConfig(pydantic.BaseModel):
     bookmarks_collection: str = "bookmarks"
 
 
+class PostgresConfig(pydantic.BaseModel):
+    PG_HOST: str = "localhost"
+    PG_PORT: int = 5433
+    PG_DATABASE: str = "test_database"
+    PG_USER: str = "app"
+    PG_PASSWORD: str = "123qwe"
+
+    batch_size = 10_000
+    film_ratings_table = "ratings"
+    reviews_table = "reviews"
+    bookmarks_table = "bookmarks"
+
+
 mongo_cfg = MongoDBConfig()
+postgres_cfg = PostgresConfig()

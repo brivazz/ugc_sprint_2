@@ -37,7 +37,7 @@ class MongoUploader:
         self._client = client
 
     @property
-    def mongo_conn(self) -> pymongo.MongoClient:
+    def mongo_conn(self) -> pymongo.MongoClient | None:
         """
         Устанавливает соединение с сервером MongoDB.
 
@@ -49,7 +49,7 @@ class MongoUploader:
             if self._client is None or not self._client.admin.command("ping"):
                 self._client = self.create_client()
         except pymongo.errors.PyMongoError as er:
-            logger.error("Mongo connection error: {0}").format(er)
+            logger.error("Mongo connection error: %s", er)
             return None
         return self._client
 
@@ -64,13 +64,15 @@ class MongoUploader:
             self._config.mongo_connection_string,
         )
 
-    def get_database(self) -> pymongo.database.Database:
+    def get_database(self) -> pymongo.database.Database | None:
         """
         Получает объект базы данных из текущего подключения к MongoDB.
 
         Returns:
             pymongo.database.Database: Объект БД.
         """
+        if self.mongo_conn is None:
+            return None
         return self.mongo_conn[self._config.db_name]
 
     def create_batch(
@@ -99,7 +101,8 @@ class MongoUploader:
 
     def drop_db(self) -> None:
         """Удаляет базу данных MongoDB."""
-        self.mongo_conn.drop_database(self._config.db_name)
+        if self.mongo_conn:
+            self.mongo_conn.drop_database(self._config.db_name)
 
     def checking_collection_in_db(
         self,
@@ -121,13 +124,14 @@ class MongoUploader:
         - Если коллекция с указанным именем не существует,
         вызывается метод create_and_configure_collection() для ее создания.
         """
-        if collection_name not in self.get_database().list_collection_names():
-            self.create_and_configure_collection(
-                self.get_database(),
-                collection_name,
-                self._client,
-                doc_id,
-            )
+        if database := self.get_database():
+            if collection_name not in database.list_collection_names():
+                self.create_and_configure_collection(
+                    self.get_database(),
+                    collection_name,
+                    self._client,
+                    doc_id,
+                )
 
     def create_collections(self) -> None:
         """Создает коллекции в MongoDB."""
@@ -181,9 +185,10 @@ class MongoUploader:
             collection_name: Имя коллекции, в которую нужно вставить данные.
             collection_data: Список словарей с данными, которые нужно вставить.
         """
-        self.get_database()[collection_name].insert_many(collection_data)
+        if database := self.get_database():
+            database[collection_name].insert_many(collection_data)
 
-    def get_collection_counts(self, collection_name: str) -> int:
+    def get_collection_counts(self, collection_name: str) -> int | None:
         """
         Возвращает количество документов в указанной коллекции.
 
@@ -193,8 +198,9 @@ class MongoUploader:
         Returns:
             int: Количество документов в коллекции.
         """
-
-        return self.get_database()[collection_name].count_documents({})
+        if database := self.get_database():
+            return database[collection_name].count_documents({})
+        return None
 
     def ratings_insert(self, num: int) -> None:
         """

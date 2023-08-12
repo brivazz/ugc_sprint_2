@@ -52,7 +52,7 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --linecount-report mypy-report .
+            mypy --show-error-codes --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report

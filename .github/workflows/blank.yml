@@ -43,15 +43,15 @@ jobs:
 
       - name: Run MyPy
         id: run_mypy
-        run: mypy .
+        run: mypy --html-report mypy-html .
         continue-on-error: true
 
       - name: save HTML
         uses: actions/upload-artifact@v2
         continue-on-error: true
         with:
-          name: flake-report
-          path: flake-report/
+          name: flake-report mypy-report
+          path: flake-report/ mypy-html/
 
       - name: Fail if errors found
         run: |

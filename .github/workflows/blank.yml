@@ -52,7 +52,7 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --html-report mypy-report --show-error-codes --custom-plugin=mypy_json_reporting.plugin
+            mypy --error-summary --show-error-codes --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report

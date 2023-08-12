@@ -1,25 +1,9 @@
-import psycopg2
-from pydantic import BaseConfig
+import typing
 
-from fake_data import create_user_film_ratings, create_reviews, create_bookmarks
+import psycopg2 # type: ignore
 
-
-class PostgresConfig(BaseConfig):
-    PG_HOST: str = "localhost"
-    PG_PORT: int = 5433
-    PG_DATABASE: str = "test_database"
-    PG_USER: str = "app"
-    PG_PASSWORD: str = "123qwe"
-
-    class Config:
-        env_file = ".env"
-        env_prefix = "POSTGRES_"
-
-
-BATCH_SIZE = 10_000
-USER_FILM_RATINGS_TABLE = "ratings"
-REVIEWS_TABLE = "reviews"
-BOOKMARKS_TABLE = "bookmarks"
+from config import postgres_cfg
+from fake_data import create_film_ratings, create_reviews, create_bookmarks
 
 
 def create_batch(iterable, n=1):
@@ -35,17 +19,17 @@ def create_batch(iterable, n=1):
 
 def create_tables():
     conn = psycopg2.connect(
-        host=config.PG_HOST,
-        port=config.PG_PORT,
-        dbname=config.PG_DATABASE,
-        user=config.PG_USER,
-        password=config.PG_PASSWORD,
+        host=postgres_cfg.PG_HOST,
+        port=postgres_cfg.PG_PORT,
+        dbname=postgres_cfg.PG_DATABASE,
+        user=postgres_cfg.PG_USER,
+        password=postgres_cfg.PG_PASSWORD,
     )
     cursor = conn.cursor()
 
     cursor.execute(
         f"""
-        CREATE TABLE IF NOT EXISTS {USER_FILM_RATINGS_TABLE} (
+        CREATE TABLE IF NOT EXISTS {postgres_cfg.film_ratings_table} (
             user_id UUID PRIMARY KEY,
             film_id UUID,
             rating SMALLINT,
@@ -56,7 +40,7 @@ def create_tables():
 
     cursor.execute(
         f"""
-        CREATE TABLE IF NOT EXISTS {REVIEWS_TABLE} (
+        CREATE TABLE IF NOT EXISTS {postgres_cfg.reviews_table} (
             user_id UUID PRIMARY KEY,
             film_id UUID,
             text TEXT,
@@ -67,7 +51,7 @@ def create_tables():
 
     cursor.execute(
         f"""
-        CREATE TABLE IF NOT EXISTS {BOOKMARKS_TABLE} (
+        CREATE TABLE IF NOT EXISTS {postgres_cfg.bookmarks_table} (
             user_id UUID PRIMARY KEY,
             film_id UUID,
             date_created TIMESTAMP
@@ -80,13 +64,13 @@ def create_tables():
     conn.close()
 
 
-def insert_data_into_table(table_name, data: list[dict]):
+def insert_data_into_table(table_name, data: typing.List[dict]):
     conn = psycopg2.connect(
-        host=config.PG_HOST,
-        port=config.PG_PORT,
-        dbname=config.PG_DATABASE,
-        user=config.PG_USER,
-        password=config.PG_PASSWORD,
+        host=postgres_cfg.PG_HOST,
+        port=postgres_cfg.PG_PORT,
+        dbname=postgres_cfg.PG_DATABASE,
+        user=postgres_cfg.PG_USER,
+        password=postgres_cfg.PG_PASSWORD,
     )
     cursor = conn.cursor()
 
@@ -103,21 +87,21 @@ def insert_data_into_table(table_name, data: list[dict]):
 
 def get_table_counts():
     conn = psycopg2.connect(
-        host=config.PG_HOST,
-        port=config.PG_PORT,
-        dbname=config.PG_DATABASE,
-        user=config.PG_USER,
-        password=config.PG_PASSWORD,
+        host=postgres_cfg.PG_HOST,
+        port=postgres_cfg.PG_PORT,
+        dbname=postgres_cfg.PG_DATABASE,
+        user=postgres_cfg.PG_USER,
+        password=postgres_cfg.PG_PASSWORD,
     )
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT COUNT(*) FROM {USER_FILM_RATINGS_TABLE}")
+    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.film_ratings_table}")
     user_film_ratings_count = cursor.fetchone()[0]
 
-    cursor.execute(f"SELECT COUNT(*) FROM {REVIEWS_TABLE}")
+    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.reviews_table}")
     reviews_count = cursor.fetchone()[0]
 
-    cursor.execute(f"SELECT COUNT(*) FROM {BOOKMARKS_TABLE}")
+    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.bookmarks_table}")
     bookmarks_count = cursor.fetchone()[0]
 
     cursor.close()
@@ -127,49 +111,50 @@ def get_table_counts():
 
 
 def user_film_insert(num):
-    user_film_ratings = create_user_film_ratings(num)
-    for counter, batch in enumerate(create_batch(user_film_ratings, BATCH_SIZE), start=1):
-        insert_data_into_table(USER_FILM_RATINGS_TABLE, [item.__dict__ for item in batch])
-        print(BATCH_SIZE * counter, "rows inserted")
+    user_film_ratings = create_film_ratings(num)
+    for counter, batch in enumerate(
+        create_batch(user_film_ratings, postgres_cfg.batch_size), start=1
+    ):
+        insert_data_into_table(
+            postgres_cfg.film_ratings_table, [item.__dict__ for item in batch]
+        )
+        print(postgres_cfg.batch_size * counter, "rows inserted")
 
 
 def reviews_insert(num):
     reviews = create_reviews(num)
-    for counter, batch in enumerate(create_batch(reviews, BATCH_SIZE), start=1):
-        insert_data_into_table(REVIEWS_TABLE, [item.__dict__ for item in batch])
-        print(BATCH_SIZE * counter, "rows inserted")
+    for counter, batch in enumerate(create_batch(reviews, postgres_cfg.batch_size), start=1):
+        insert_data_into_table(postgres_cfg.reviews_table, [item.__dict__ for item in batch])
+        print(postgres_cfg.batch_size * counter, "rows inserted")
 
 
 def bookmarks_insert(num):
     bookmarks = create_bookmarks(num)
-    for counter, batch in enumerate(create_batch(bookmarks, BATCH_SIZE), start=1):
-        insert_data_into_table(BOOKMARKS_TABLE, [item.__dict__ for item in batch])
-        print(BATCH_SIZE * counter, "rows inserted")
+    for counter, batch in enumerate(create_batch(bookmarks, postgres_cfg.batch_size), start=1):
+        insert_data_into_table(postgres_cfg.bookmarks_table, [item.__dict__ for item in batch])
+        print(postgres_cfg.batch_size * counter, "rows inserted")
 
 
 def main():
     num_elements = 15 * 1_000_000
 
-    global config
-    config = PostgresConfig()
-
     create_tables()
 
     user_film_insert(num_elements)
-    print(f"Data is inserted to table {USER_FILM_RATINGS_TABLE}")
+    print(f"Data is inserted to table {postgres_cfg.film_ratings_table}")
 
     reviews_insert(num_elements)
-    print(f"Data is inserted to table {REVIEWS_TABLE}")
+    print(f"Data is inserted to table {postgres_cfg.reviews_table}")
 
     bookmarks_insert(num_elements)
-    print(f"Data is inserted to table {BOOKMARKS_TABLE}")
+    print(f"Data is inserted to table {postgres_cfg.bookmarks_table}")
 
     print(f"{20 * '='}\nData insertion completed successfully!")
 
     user_film_ratings_count, reviews_count, bookmarks_count = get_table_counts()
-    print(f"Table '{USER_FILM_RATINGS_TABLE}' count: {user_film_ratings_count}")
-    print(f"Table '{REVIEWS_TABLE}' count: {reviews_count}")
-    print(f"Table '{BOOKMARKS_TABLE}' count: {bookmarks_count}")
+    print(f"Table '{postgres_cfg.film_ratings_table}' count: {user_film_ratings_count}")
+    print(f"Table '{postgres_cfg.reviews_table}' count: {reviews_count}")
+    print(f"Table '{postgres_cfg.bookmarks_table}' count: {bookmarks_count}")
 
 
 if __name__ == "__main__":

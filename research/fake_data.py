@@ -39,7 +39,7 @@ def generate_timestamp():
     return datetime.datetime.now(datetime.timezone.utc)
 
 
-def create_user_film_ratings(num_elements):
+def create_film_ratings(num_elements):
     for _ in range(num_elements):
         yield UserFilmRating(
             user_id=generate_uuid(),
@@ -69,7 +69,7 @@ def create_bookmarks(num_elements):
 
 
 def get_likes_bookmarks_reviews(number_rows):
-    likes = create_user_film_ratings(number_rows)
+    likes = create_film_ratings(number_rows)
     bookmarks = create_bookmarks(number_rows)
     reviews = create_reviews(number_rows)
     return likes, bookmarks, reviews

@@ -1,8 +1,7 @@
 """Генерирует тестовые логи и записывает в файл."""
 
 import datetime
-import typing
-import json
+from typing import Dict, Any
 
 import uvicorn # type: ignore
 from loguru import logger # type: ignore
@@ -18,7 +17,7 @@ logger.add(
 )
 
 
-def generate_log_message() -> dict[str, typing.Any]:
+def generate_log_message() -> Dict[str, Any]:
     """
     Генерирует сообщения журнала.
 
@@ -36,7 +35,7 @@ def generate_log_message() -> dict[str, typing.Any]:
 
 
 @app.get("/")
-async def write_log_file() -> dict[str, typing.Any]:
+async def write_log_file() -> Dict[str, Any]:
     """
     Записывает файл лога в каталог.
 

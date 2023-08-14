@@ -3,9 +3,9 @@
 import datetime
 from typing import Dict, Any
 
-import uvicorn # type: ignore
-from loguru import logger # type: ignore
-from fastapi import FastAPI # type: ignore
+import uvicorn  # type: ignore
+from loguru import logger  # type: ignore
+from fastapi import FastAPI  # type: ignore
 
 
 app = FastAPI()

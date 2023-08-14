@@ -1,0 +1,35 @@
+filebeat.inputs:
+- type: filestream
+  id: nginx_filestream_access
+  paths:
+    - nginx/access.log
+  fields:
+    log_type: nginx_access
+- type: filestream
+  id: nginx_filestream_error
+  paths:
+    - nginx/error.log
+  fields:
+    log_type: nginx_error
+- type: filestream
+  id: fastapi_filestream
+  paths:
+    - fastapi/*.log
+  fields:
+    log_type: fastapi
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+processors:
+- add_docker_metadata: ~
+
+setup.kibana:
+  host: ${KIBANA_HOSTS}
+  username: ${ELASTIC_USER}
+  password: ${ELASTIC_PASSWORD}
+
+output.logstash:
+  hosts: "logstash01:5044"

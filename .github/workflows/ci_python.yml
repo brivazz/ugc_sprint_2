@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -30,11 +30,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install wemake-python-styleguide flake8-html mypy lxml
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run Linters
         id: run_linters
-        run: flake8 --ignore=WPS305,I001,I004,I005,WPS352,WPS421,WPS237,WPS306
-              --exclude=research/,docker/docker-elk/main.py
+        run: flake8
+              --config ./setup.cfg
               --max-methods=14
               --inline-quotes=double
               --format=html
@@ -52,7 +53,7 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --show-error-codes --html-report mypy-report .
+            mypy --show-error-codes --html-report mypy-report . --config-file ./setup.cfg
         continue-on-error: true
 
       - name: Save mypy HTML report
@@ -73,6 +74,10 @@ jobs:
             echo "MyPy errors found. Exiting with error."
             exit 1
           fi
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+        id: extract_branch
 
       - name: Telegram Notification
         if: cancelled() == false
@@ -85,6 +90,7 @@ jobs:
             Repository: ${{ github.repository }}
             Event: ${{ github.event_name }}
             From user: ${{ github.actor }}
-            Branch name: ${{ github.ref }}
+            Branch: ${{ github.ref }}
+            Branch name: ${{ steps.extract_branch.outputs.branch }}
             Python version: ${{ matrix.python-version }}
             status: ${{ job.status }}

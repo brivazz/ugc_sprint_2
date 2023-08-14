@@ -1,3 +1,0 @@
-[flake8]
-ignore = I001,I004,Q000,WPS432
-exclude = ./main.py

@@ -164,7 +164,7 @@ services:
     volumes:
       - certs:/usr/share/metricbeat/certs
       - metricbeatdata01:/usr/share/metricbeat/data
-      - "./config_elk/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - ".elk/config_elk/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
       - "/proc:/hostfs/proc:ro"
@@ -189,7 +189,7 @@ services:
       - filebeatdata01:/usr/share/filebeat/data
       - "./fastapi_logs:/usr/share/filebeat/fastapi/"
       - "./nginx_logs/:/usr/share/filebeat/nginx/"
-      - "./config_elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - ".elk/config_elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
       - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command: sh -c "cp /usr/share/filebeat/filebeat.yml /tmp/filebeat.yml && filebeat -c /tmp/filebeat.yml"
@@ -215,7 +215,7 @@ services:
     volumes:
       - certs:/usr/share/logstash/certs
       - logstashdata01:/usr/share/logstash/data
-      - "./config_elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+      - ".elk/config_elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
     environment:
       - xpack.monitoring.enabled=false
       - ELASTIC_USER=elastic

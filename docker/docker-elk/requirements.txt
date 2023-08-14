@@ -1,5 +1,0 @@
-# sentry-sdk[fastapi]==1.28.1
-python-logstash==0.4.8
-fastapi==0.61.1
-uvicorn==0.12.2
-loguru==0.7.0

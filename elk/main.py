@@ -8,7 +8,7 @@ from loguru import logger  # type: ignore
 from fastapi import FastAPI  # type: ignore
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 logger.add(
     "/var/log/file.log",
@@ -45,5 +45,5 @@ async def write_log_file() -> Dict[str, Any]:
     return generate_log_message()
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,14 +1,13 @@
 """Генерирует тестовые логи и записывает в файл."""
 
 import datetime
-from typing import Dict, Any
+from typing import Any
 
 import uvicorn  # type: ignore
-from loguru import logger  # type: ignore
 from fastapi import FastAPI  # type: ignore
+from loguru import logger  # type: ignore
 
-
-app = FastAPI(debug=True)
+app = FastAPI()
 
 logger.add(
     "/var/log/file.log",
@@ -17,15 +16,16 @@ logger.add(
 )
 
 
-def generate_log_message() -> Dict[str, Any]:
+def generate_log_message() -> dict[str, Any]:
     """
     Генерирует сообщения журнала.
 
     Returns:
         dict: Словарь лога.
     """
-    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat(
-        timespec="milliseconds", sep=" ",
+    timestamp = datetime.datetime.now(datetime.UTC).isoformat(
+        timespec="milliseconds",
+        sep=" ",
     )
     message = "This is a sample log message"
     log_message = {"@timestamp": timestamp, "message": message}
@@ -35,7 +35,7 @@ def generate_log_message() -> Dict[str, Any]:
 
 
 @app.get("/")
-async def write_log_file() -> Dict[str, Any]:
+async def write_log_file() -> dict[str, Any]:
     """
     Записывает файл лога в каталог.
 

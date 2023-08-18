@@ -1,17 +1,11 @@
 """Этот скрипт выполняет вставку данных в коллекции MongoDB."""
 
-import __future__
 import logging
 import typing
 
-import pymongo # type: ignore
-
-from config import mongo_cfg, MongoDBConfig
-from fake_data import (
-    create_bookmarks,
-    create_reviews,
-    create_film_ratings,
-)
+import pymongo  # type: ignore
+from config import MongoDBConfig, mongo_cfg
+from fake_data import create_bookmarks, create_film_ratings, create_reviews
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +16,7 @@ class MongoUploader:
     def __init__(
         self,
         config: MongoDBConfig,
-        client: typing.Optional[pymongo.MongoClient] = None,
+        client: pymongo.MongoClient | None = None,
     ) -> None:
         """
         Инициализирует объект класса, конфигурацию и клиент MongoDB.
@@ -38,7 +32,7 @@ class MongoUploader:
         self._client = client
 
     @property
-    def mongo_conn(self) -> typing.Union[pymongo.MongoClient, None]:
+    def mongo_conn(self) -> pymongo.MongoClient | None:
         """
         Устанавливает соединение с сервером MongoDB.
 
@@ -65,7 +59,7 @@ class MongoUploader:
             self._config.mongo_connection_string,
         )
 
-    def get_database(self) -> typing.Union[pymongo.database.Database, None]:
+    def get_database(self) -> pymongo.database.Database | None:
         """
         Получает объект базы данных из текущего подключения к MongoDB.
 
@@ -178,7 +172,7 @@ class MongoUploader:
     def insert_data_into_collection(
         self,
         collection_name: str,
-        collection_data: typing.List[dict],
+        collection_data: list[dict],
     ) -> None:
         """
         Вставляет данные в коллекцию в MongoDB.
@@ -191,7 +185,7 @@ class MongoUploader:
         if database:
             database[collection_name].insert_many(collection_data)
 
-    def get_collection_counts(self, collection_name: str) -> typing.Union[int, None]:
+    def get_collection_counts(self, collection_name: str) -> int | None:
         """
         Возвращает количество документов в указанной коллекции.
 

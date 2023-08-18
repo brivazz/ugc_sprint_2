@@ -1,11 +1,9 @@
 import time
-from typing import List
 
-import psycopg2 # type: ignore
-from pydantic import BaseModel # type: ignore
-
+import psycopg2  # type: ignore
 from config import postgres_cfg
-from fake_data import create_film_ratings, create_reviews, create_bookmarks
+from fake_data import create_bookmarks, create_film_ratings, create_reviews
+from pydantic import BaseModel  # type: ignore
 
 
 class PostgresConfig(BaseModel):
@@ -77,7 +75,7 @@ def create_tables(conn):
     cursor.close()
 
 
-def insert_data_into_table(conn, table_name, data: List[dict]):
+def insert_data_into_table(conn, table_name, data: list[dict]):
     cursor = conn.cursor()
 
     columns = ", ".join(data[0].keys())
@@ -181,7 +179,7 @@ def main():
         password=config.PG_PASSWORD,
     )
 
-    user_film_ratings = list(create_user_film_ratings(num_elements))
+    user_film_ratings = list(create_film_ratings(num_elements))
     reviews = list(create_reviews(num_elements))
     bookmarks = list(create_bookmarks(num_elements))
 

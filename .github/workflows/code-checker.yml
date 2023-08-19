@@ -34,8 +34,8 @@ jobs:
             then pip install -r requirements.txt;
           fi
 
-      - name: Run Linters
-        id: run_linters
+      - name: Run Flake8
+        id: run_flake8
         run: flake8
               --config ./pyproject.toml
               --exclude="./research,./elk/main.py"
@@ -54,10 +54,10 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy
-              --config-file ./pyproject.toml
-              --exclude '/(research|elk/main\.py$)'
-              --show-error-codes --html-report mypy-report .
+            mypy .
+            --config-file ./pyproject.toml
+            --exclude '/(research|elk/main\.py)'
+            --show-error-codes --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report
@@ -69,7 +69,7 @@ jobs:
 
       - name: Fail if errors found
         run: |
-          if [ "${{ steps.run_linters.outcome }}" == "failure" ]; then
+          if [ "${{ steps.run_flake8.outcome }}" == "failure" ]; then
             echo "Linting errors found. Exiting with error."
             exit 1
           fi

@@ -30,6 +30,7 @@ remove-unused-variables = true
 [tool.flake8]
 max-line-length = 119
 inline-quotes = "double"
+max-methods = 14
 exclude = ["research", "elk/main.py"]
 ignore = """
     # I001: isort found an import in the wrong position
@@ -75,27 +76,3 @@ disallow_incomplete_defs = true
 disallow_untyped_decorators = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
-
-# --------- Pytest -------------
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-n auto"
-testpaths = "tests"
-norecursedirs = [
-".tox",
-".git",
-"*/migrations/*",
-"*/static/*",
-"docs",
-"venv",
-]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "secondary: mark tests that use functionality tested in the same file (deselect with '-m \"not secondary\"')"
-]
-filterwarnings = [
-    "error",
-    # Until https://github.com/ktosiek/pytest-freezegun/issues/35 is merged
-    "ignore::DeprecationWarning:pytest_freezegun.*",
-]

@@ -5,6 +5,6 @@ yaml-files:
 
 extends: default
 rules:
-  line-length:
-    max: 8
-    level: warning
+  line-length: disable
+    # max: 8
+    # level: warning

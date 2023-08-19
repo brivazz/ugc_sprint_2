@@ -58,7 +58,6 @@ docstring-convention = "numpy"
 # --------- Mypy -------------
 
 [tool.mypy]
-exclude = ['research', 'elk/main\.py']
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = false

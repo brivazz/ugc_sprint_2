@@ -38,6 +38,7 @@ jobs:
         id: run_linters
         run: flake8
               --config ./pyproject.toml
+              --exclude=research/,elk/main.py
               --max-methods=14
               --inline-quotes=double
               --format=html

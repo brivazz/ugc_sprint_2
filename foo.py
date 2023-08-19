@@ -1,1 +1,1 @@
-print("Python awesome")
+a = 5

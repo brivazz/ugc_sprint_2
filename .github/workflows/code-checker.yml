@@ -37,7 +37,7 @@ jobs:
       - name: Run Linters
         id: run_linters
         run: flake8
-              --config ./setup.cfg
+              --config ./pyproject.toml
               --max-methods=14
               --inline-quotes=double
               --format=html
@@ -55,7 +55,8 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --show-error-codes --html-report mypy-report . --config-file ./setup.cfg
+            mypy --show-error-codes --html-report mypy-report .
+            --config-file ./pyproject.toml
         continue-on-error: true
 
       - name: Save mypy HTML report

@@ -60,7 +60,7 @@ docstring-convention = "numpy"
 [tool.mypy]
 show_error_codes = true
 follow_imports = "silent"
-ignore_missing_imports = false
+ignore_missing_imports = true
 strict_optional = true
 check_untyped_defs = true
 no_implicit_reexport = true

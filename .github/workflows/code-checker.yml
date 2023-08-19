@@ -37,9 +37,8 @@ jobs:
       - name: Run Flake8
         id: run_flake8
         run: flake8
-              --config ./setup.cfg
-              --exclude="./research,./elk/main.py"
-              --inline-quotes=double
+              --config=./setup.cfg
+              --exclude=research,elk/main.py
               --format=html
               --htmldir=flake-report .
         continue-on-error: true
@@ -55,10 +54,10 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --config-file ./setup.cfg
-            --exclude "^elk/main\.py$"
-            --exclude "^research/"
-            --show-error-codes
+            mypy --config-file ./setup.cfg \
+            --exclude "^elk/main\.py$" \
+            --exclude "^research/" \
+            --show-error-codes \
             --html-report mypy-report .
         continue-on-error: true
 

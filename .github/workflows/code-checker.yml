@@ -54,7 +54,9 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --exclude research --exclude elk/main.py
+            mypy
+            --exclude research
+            --exclude elk/main.py
             --config-file ./pyproject.toml
             --show-error-codes --html-report mypy-report .
         continue-on-error: true
@@ -86,6 +88,10 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
+            if [ "${{ job.status }}" == "failure" ]; then
+              echo "Errors found. Exiting with error."
+              exit 1
+            fi
             Repository: ${{ github.repository }}
             Event: ${{ github.event_name }}
             From user: ${{ github.actor }}

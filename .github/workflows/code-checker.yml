@@ -55,7 +55,7 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --config-file ./setup.cfg --exclude "^elk/main\.py$" --exclude "^research/" --show-error-codes --html-report mypy-report .
+            mypy --config-file ./setup.cfg --exclude "^elk/main\.py$" --exclude "^research/" --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report

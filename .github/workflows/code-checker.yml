@@ -54,10 +54,9 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy --show-error-codes --html-report mypy-report .
+            mypy --exclude research --exclude elk/main.py
             --config-file ./pyproject.toml
-            --exclude "research"
-            --exclude "elk/main.py"
+            --show-error-codes --html-report mypy-report .
         continue-on-error: true
 
       - name: Save mypy HTML report

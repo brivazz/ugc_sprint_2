@@ -54,9 +54,8 @@ jobs:
         id: run_mypy
         run: |
             mkdir mypy-report
-            mypy .
+            mypy
             --config-file ./pyproject.toml
-            --exclude='research,elk/main.py'
             --show-error-codes --html-report mypy-report .
         continue-on-error: true
 

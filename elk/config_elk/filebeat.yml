@@ -1,22 +1,22 @@
 filebeat.inputs:
-- type: filestream
-  id: nginx_filestream_access
-  paths:
-    - nginx/access.log
-  fields:
-    log_type: nginx_access
-- type: filestream
-  id: nginx_filestream_error
-  paths:
-    - nginx/error.log
-  fields:
-    log_type: nginx_error
-- type: filestream
-  id: fastapi_filestream
-  paths:
-    - fastapi/*.log
-  fields:
-    log_type: fastapi
+  - type: filestream
+    id: nginx_filestream_access
+    paths:
+      - nginx/access.log
+    fields:
+      log_type: nginx_access
+  - type: filestream
+    id: nginx_filestream_error
+    paths:
+      - nginx/error.log
+    fields:
+      log_type: nginx_error
+  - type: filestream
+    id: fastapi_filestream
+    paths:
+      - fastapi/*.log
+    fields:
+      log_type: fastapi
 
 filebeat.autodiscover:
   providers:
@@ -24,7 +24,7 @@ filebeat.autodiscover:
       hints.enabled: true
 
 processors:
-- add_docker_metadata: ~
+  - add_docker_metadata: ~
 
 setup.kibana:
   host: ${KIBANA_HOSTS}

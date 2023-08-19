@@ -12,7 +12,7 @@ services:
     volumes:
       - ./db/mongo:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD", "mongo", "--eval", "db.runCommand('ping').ok" ]
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
       interval: 30s
       timeout: 10s
       retries: 5

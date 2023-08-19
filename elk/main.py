@@ -23,7 +23,7 @@ def generate_log_message() -> dict[str, Any]:
     Returns:
         dict: Словарь лога.
     """
-    timestamp = datetime.datetime.now(datetime.UTC).isoformat(
+    timestamp = datetime.datetime.now(datetime.UTC).isoformat(  # type: ignore
         timespec="milliseconds",
         sep=" ",
     )

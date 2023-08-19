@@ -1,7 +1,6 @@
 import time
 
 import psycopg2  # type: ignore
-from config import postgres_cfg
 from fake_data import create_bookmarks, create_film_ratings, create_reviews
 from pydantic import BaseModel  # type: ignore
 

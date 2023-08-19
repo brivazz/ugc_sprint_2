@@ -1,57 +1,29 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-# repos:
-#   - repo: https://github.com/PyCQA/autoflake
-#     rev: v2.0.1
-#     hooks:
-#       - id: autoflake
-
-#   - repo: 'https://github.com/pre-commit/pre-commit-hooks'
-#     rev: v4.4.0
-#     hooks:
-#       - id: check-yaml
-#       - id: check-toml
-#       # предупреждает о добавлении больших файлов в Git
-#       - id: check-added-large-files
-#       # предупреждает о сохранении файлов с UTF-8 BOM
-#       - id: check-byte-order-marker
-#       # предотвращает сохранение приватных ключей
-#       - id: detect-private-key
-#       # проверяет, что файлы, которые мы собираемся сохранять, как минимум валидный Python
-#       - id: check-ast
-
-#   - repo: https://github.com/PyCQA/isort
-#     rev: 5.12.0
-#     hooks:
-#       - id: isort
-#         args: ["--profile", "black"]
-
-#   - repo: https://github.com/psf/black
-#     rev: 23.7.0
-#     hooks:
-#       - id: black
-#         exclude: ^.*\b(migrations)\b.*$
-
-#   - repo: https://github.com/pycqa/flake8
-#     rev: 6.0.0
-#     additional_dependencies: [cfg]
-#     hooks:
-#       - id: flake8
-
-
-# exclude: "^docs/|/migrations/"
-# default_stages: [commit]
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.0
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.32.0
     hooks:
+      - id: yamllint
+        args: [-c=.yamllint]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-toml
+      # Для обрезки завершающих пробелов
       - id: trailing-whitespace
+      # Для гарантии, что файлы заканчиваются новой строкой
       - id: end-of-file-fixer
-      - id: check-yaml
+      # Для контроля размера файлов, предотвратит добавление больших файлов в Git
+      - id: check-added-large-files
+      # Для проверки конфликтов слияния до любого коммита
       - id: check-merge-conflict
+      # Для предотвращения сохранение приватных ключей
       - id: detect-private-key
-      - id: debug-statements
+      # Проверяет файлы Python на их валидность
+      - id: check-ast
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
@@ -63,12 +35,28 @@ repos:
     rev: 5.12.0
     hooks:
       - id: isort
+        additional_dependencies: [toml]
 
   - repo: https://github.com/psf/black
     rev: 23.7.0
     hooks:
       - id: black
         exclude: ^.*\b(migrations)\b.*$
+        additional_dependencies: [toml]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.0
+    hooks:
+      - name: mypy
+        id: mypy
+        exclude: research
+        additional_dependencies:
+          - toml
+          - pydantic
+        args:
+          # mypy не распознает конфигурацию в pyproject.toml,
+          # в котором включена эта опция
+          - --allow-untyped-decorators
 
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.0.1
@@ -93,10 +81,6 @@ repos:
       - id: detect-secrets
         args: [filename, .env]
         exclude: .env.example
-
-# install
-# poetry add pre-commit --group dev
-# pre-commit install
 
 # run check
 # pre-commit run --show-diff-on-failure --color=always --all-files

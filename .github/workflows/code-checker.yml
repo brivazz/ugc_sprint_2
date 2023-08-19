@@ -37,7 +37,7 @@ jobs:
       - name: Run Flake8
         id: run_flake8
         run: flake8
-              --config=./setup.cfg
+              --config=setup.cfg
               --exclude=research,elk/main.py
               --format=html
               --htmldir=flake-report .

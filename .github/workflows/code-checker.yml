@@ -56,7 +56,7 @@ jobs:
             mkdir mypy-report
             mypy .
             --config-file ./pyproject.toml
-            --exclude '/(research|elk/main\.py)'
+            --exclude='research,elk/main.py'
             --show-error-codes --html-report mypy-report .
         continue-on-error: true
 

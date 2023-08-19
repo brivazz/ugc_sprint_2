@@ -4,20 +4,22 @@
 line-length = 119
 target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
 include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-    | \.git
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-)/
-'''
+exclude = """
+(
+    /(
+        |.eggs
+        | .git
+        | .hg
+        | .mypy_cache
+        | .tox
+        | .venv
+        | _build
+        | buck-out
+        | build
+        | dist
+    )/
+)
+"""
 
 # --------- Isort -------------
 
@@ -44,7 +46,7 @@ remove-unused-variables = true
 [tool.flake8]
 max-line-length = 119
 inline-quotes = "double"
-exclude = "research/,elk/main.py"
+exclude = ["research", "elk/main.py"]
 ignore = """
     # I001: isort found an import in the wrong position
     I001,
@@ -73,6 +75,7 @@ docstring-convention = "numpy"
 [tool.mypy]
 # python_version = "3.11"
 # files =
+exclude = "./research,./elk/main.py"
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = false

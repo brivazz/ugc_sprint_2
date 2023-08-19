@@ -38,7 +38,6 @@ jobs:
         id: run_linters
         run: flake8
               --config ./pyproject.toml
-              --exclude=research/,elk/main.py
               --max-methods=14
               --inline-quotes=double
               --format=html
@@ -58,7 +57,6 @@ jobs:
             mkdir mypy-report
             mypy --show-error-codes --html-report mypy-report .
             --config-file ./pyproject.toml
-            --exclude=./research,./elk/main.py
         continue-on-error: true
 
       - name: Save mypy HTML report

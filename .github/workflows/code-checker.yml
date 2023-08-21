@@ -93,4 +93,4 @@ jobs:
             From user: ${{ github.actor }}
             Branch: ${{ github.ref }}
             Python version: ${{ matrix.python-version }}
-            Status: **${{ job.status }}**
+            Status: <b>${{ job.status }}</b>

@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: app
       POSTGRES_DB: test_database
-      POSTGRES_PASSWORD: 123qwe
+      POSTGRES_PASSWORD: 123qwe  # pragma: allowlist secret
     volumes:
       - pgdata:/var/lib/postgresql/data
 

@@ -1,5 +1,0 @@
-[flake8]
-max-line-length = 79
-ignore = WPS305,I001,I005,WPS352,WPS421,WPS237,WPS214,WPS306
-inline-quotes = double
-; exclude = research/mongo_metrics.py

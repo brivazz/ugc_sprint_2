@@ -1,11 +1,11 @@
-import pydantic # type: ignore
+import pydantic  # type: ignore
 
 
 class MongoDBConfig(pydantic.BaseModel):
     """Configuration class for MongoDB."""
 
-    mongo_connection_string: str = "mongodb://root:example@localhost:27017/"
-    # mongo_connection_string: str = "mongodb://root:example@mongo:27017/"
+    mongo_connection_string: str = "mongodb://root:example@localhost:27017/"  # pragma: allowlist secret
+    # mongo_connection_string: str = "mongodb://root:example@mongo:27017/"  # pragma: allowlist secret
     db_name: str = "someDb"
 
     # num_elements: int = 15 * 1_000_000

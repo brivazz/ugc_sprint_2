@@ -1,7 +1,7 @@
-from dataclasses import dataclass
-import uuid
-import random
 import datetime
+import random
+import uuid
+from dataclasses import dataclass
 
 
 @dataclass
@@ -36,7 +36,7 @@ def generate_rating():
 
 
 def generate_timestamp():
-    return datetime.datetime.now(datetime.timezone.utc)
+    return datetime.datetime.now(datetime.UTC)
 
 
 def create_film_ratings(num_elements):

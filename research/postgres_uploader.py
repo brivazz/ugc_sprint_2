@@ -1,9 +1,6 @@
-import typing
-
-import psycopg2 # type: ignore
-
+import psycopg2  # type: ignore
 from config import postgres_cfg
-from fake_data import create_film_ratings, create_reviews, create_bookmarks
+from fake_data import create_bookmarks, create_film_ratings, create_reviews
 
 
 def create_batch(iterable, n=1):
@@ -64,7 +61,7 @@ def create_tables():
     conn.close()
 
 
-def insert_data_into_table(table_name, data: typing.List[dict]):
+def insert_data_into_table(table_name, data: list[dict]):
     conn = psycopg2.connect(
         host=postgres_cfg.PG_HOST,
         port=postgres_cfg.PG_PORT,
@@ -112,12 +109,8 @@ def get_table_counts():
 
 def user_film_insert(num):
     user_film_ratings = create_film_ratings(num)
-    for counter, batch in enumerate(
-        create_batch(user_film_ratings, postgres_cfg.batch_size), start=1
-    ):
-        insert_data_into_table(
-            postgres_cfg.film_ratings_table, [item.__dict__ for item in batch]
-        )
+    for counter, batch in enumerate(create_batch(user_film_ratings, postgres_cfg.batch_size), start=1):
+        insert_data_into_table(postgres_cfg.film_ratings_table, [item.__dict__ for item in batch])
         print(postgres_cfg.batch_size * counter, "rows inserted")
 
 

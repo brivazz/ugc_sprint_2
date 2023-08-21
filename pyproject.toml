@@ -1,0 +1,26 @@
+# --------- Black -------------
+
+[tool.black]
+line-length = 119
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+
+# --------- Isort -------------
+
+[tool.isort]
+profile = "black"
+line_length = 119
+multi_line_output = 3
+include_trailing_comma = true
+skip_gitignore = true
+use_parentheses = true
+ensure_newline_before_comments = true
+# src_paths = ["src", "test"]
+
+# --------- AutoFlake -------------
+
+[tool.autoflake]
+remove-all-unused-imports = true
+expand-star-imports = true
+remove-duplicate-keys = true
+remove-unused-variables = true

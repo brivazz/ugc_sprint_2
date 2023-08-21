@@ -196,8 +196,8 @@ services:
     volumes:
       - certs:/usr/share/filebeat/certs
       - filebeatdata01:/usr/share/filebeat/data
-      - "./fastapi_logs:/usr/share/filebeat/fastapi/"
-      - "./nginx_logs/:/usr/share/filebeat/nginx/"
+      - "./logs/fastapi_logs:/usr/share/filebeat/fastapi/"
+      - "./logs/nginx_logs/:/usr/share/filebeat/nginx/"
       - "./elk/config_elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
       - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

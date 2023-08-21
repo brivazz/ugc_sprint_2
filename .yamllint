@@ -6,5 +6,5 @@ yaml-files:
 extends: default
 rules:
   line-length: disable
-    # max: 8
+    # max: 119
     # level: warning

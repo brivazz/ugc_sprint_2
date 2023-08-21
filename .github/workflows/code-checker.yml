@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Telegram Notification
-        if: cancelled() == false
+        if: ${{ job.status }} == success && cancelled() == false
         uses: appleboy/telegram-action@master
         continue-on-error: true
         with:

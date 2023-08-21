@@ -35,7 +35,7 @@ jobs:
           fi
 
       - name: Run Flake8
-        id: run_flake8
+        id: run_linters
         run: flake8
               --config=setup.cfg
               --exclude=research,elk/main.py
@@ -70,8 +70,8 @@ jobs:
 
       - name: Fail if errors found
         run: |
-          if [ "${{ steps.run_flake8.outcome }}" == "failure" ]; then
-            echo "Linting errors found. Exiting with error."
+          if [ "${{ steps.run_linters.outcome }}" == "failure" ]; then
+            echo "Linters errors found. Exiting with error."
             exit 1
           fi
 

@@ -230,7 +230,7 @@ services:
     volumes:
       - "./../nginx/nginx.conf:/etc/nginx/nginx.conf"
       - "./../nginx/conf.d/site.conf:/etc/nginx/conf.d/site.conf"
-      - "./nginx_logs:/var/log/nginx"
+      - "./logs/nginx_logs:/var/log/nginx"
     depends_on:
       - fast_api
     ports:
@@ -248,4 +248,4 @@ services:
       - logstash01
       - filebeat01
     volumes:
-      - "./fastapi_logs:/var/log"
+      - "./logs/fastapi_logs:/var/log"

@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Telegram Notification
-        if: ${{ job.status }} == success && cancelled() == false
+        if: ${{ job.status }} == success || cancelled() == false
         uses: appleboy/telegram-action@master
         continue-on-error: true
         with:
@@ -93,4 +93,4 @@ jobs:
             From user: ${{ github.actor }}
             Branch: ${{ github.ref }}
             Python version: ${{ matrix.python-version }}
-            Status: <b>${{ job.status }}</b>
+            Status: ${{ job.status }}

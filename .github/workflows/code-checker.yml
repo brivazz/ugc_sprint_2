@@ -29,12 +29,7 @@ jobs:
       - name: Install dependencies on Python ${{ matrix.python-version }}
         run: |
           python -m pip install --upgrade pip
-
-          if [ "${{ matrix.python-version }}" == "3.7" ]; then
-          pip install wemake-python-styleguide;
-          fi
-
-          pip install wemake-python-styleguide==0.18.0 flake8-html==0.4.3 mypy==1.5.1 lxml
+          pip install wemake-python-styleguide flake8-html mypy lxml
 
       - name: Run Flake8
         id: run_linters

@@ -41,10 +41,10 @@ class MongoUploader:
             представляющий соединение с сервером MongoDB.
         """
         try:
-            if self._client is None or not self._client.admin.command("ping"):
+            if self._client is None or not self._client.admin.command('ping'):
                 self._client = self.create_client()
         except pymongo.errors.PyMongoError as er:
-            logger.error("Mongo connection error: %s", er)
+            logger.error('Mongo connection error: %s', er)
             return None
         return self._client
 
@@ -133,15 +133,15 @@ class MongoUploader:
         """Создает коллекции в MongoDB."""
         self.checking_collection_in_db(
             self._config.film_ratings_collection,
-            "film_id",
+            'film_id',
         )
         self.checking_collection_in_db(
             self._config.reviews_collection,
-            "film_id",
+            'film_id',
         )
         self.checking_collection_in_db(
             self._config.bookmarks_collection,
-            "user_id",
+            'user_id',
         )
 
     def create_and_configure_collection(
@@ -161,11 +161,11 @@ class MongoUploader:
             index: Имя поля или атрибута для создания индекса.
         """
         database.create_collection(collection)
-        client.admin.command("enableSharding", self._config.db_name)
+        client.admin.command('enableSharding', self._config.db_name)
         client.admin.command(
-            "shardCollection",
-            f"{database}.{self._config.film_ratings_collection}",
-            key={"_id": "hashed"},
+            'shardCollection',
+            f'{database}.{self._config.film_ratings_collection}',
+            key={'_id': 'hashed'},
         )
         database[collection].create_index([(index, pymongo.ASCENDING)])
 
@@ -216,7 +216,7 @@ class MongoUploader:
                 self._config.film_ratings_collection,
                 [user_film_rating.__dict__ for user_film_rating in batch],
             )
-            logger.info(self._config.batch_size * count, "rows inserted")
+            logger.info(self._config.batch_size * count, 'rows inserted')
 
     def reviews_insert(self, num: int) -> None:
         """
@@ -234,7 +234,7 @@ class MongoUploader:
                 self._config.reviews_collection,
                 [review.__dict__ for review in batch],
             )
-            logger.info(self._config.batch_size * count, "rows inserted")
+            logger.info(self._config.batch_size * count, 'rows inserted')
 
     def bookmarks_insert(self, num: int) -> None:
         """
@@ -252,7 +252,7 @@ class MongoUploader:
                 self._config.bookmarks_collection,
                 [bookmark.__dict__ for bookmark in batch],
             )
-            logger.info(self._config.batch_size * count, "rows inserted")
+            logger.info(self._config.batch_size * count, 'rows inserted')
 
 
 def main() -> None:
@@ -272,8 +272,8 @@ def main() -> None:
         count = mongo_uploader.get_collection_counts(collection_name)
         print(f"Collection '{collection_name}' count: {count}")
 
-    print("Data insertion completed successfully!")
+    print('Data insertion completed successfully!')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

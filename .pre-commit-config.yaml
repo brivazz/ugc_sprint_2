@@ -8,28 +8,11 @@ repos:
       - id: yamllint
         args: [-c=.yamllint]
 
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
-    hooks:
-      - id: check-toml
-      # Для обрезки завершающих пробелов
-      - id: trailing-whitespace
-      # Для гарантии, что файлы заканчиваются новой строкой
-      - id: end-of-file-fixer
-      # Для контроля размера файлов, предотвратит добавление больших файлов в Git
-      - id: check-added-large-files
-      # Для проверки конфликтов слияния до любого коммита
-      - id: check-merge-conflict
-      # Для предотвращения сохранение приватных ключей
-      - id: detect-private-key
-      # Проверяет файлы Python на их валидность
-      - id: check-ast
-
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
     hooks:
       - id: pyupgrade
-        args: [--py311-plus]
+        args: ["--py311-plus"]
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
@@ -42,30 +25,43 @@ repos:
     hooks:
       - id: black
         exclude: ^.*\b(migrations)\b.*$
+        args: ["--skip-string-normalization"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-toml
+      # Проверяет наличие кода перед документ-строкой
+      - id: check-docstring-first
+      # Пытается загрузить все файлы json для проверки синтаксиса
+      - id: check-json
+      # Для обрезки завершающих пробелов
+      - id: trailing-whitespace
+      # Для гарантии, что файлы заканчиваются новой строкой
+      - id: end-of-file-fixer
+      # Для контроля размера файлов, предотвратит добавление больших файлов в Git
+      - id: check-added-large-files
+      # Для проверки конфликтов слияния до любого коммита
+      - id: check-merge-conflict
+      # Заменяет двойные кавычки на одинарные
+      - id: double-quote-string-fixer
+      # Для предотвращения сохранение приватных ключей
+      - id: detect-private-key
+      # Сортирует и удаляет неправильные записи в requirements.txt
+      - id: requirements-txt-fixer
+      # Проверяет файлы Python на их валидность
+      - id: check-ast
 
   - repo: https://github.com/pycqa/flake8
     rev: 6.0.0
     hooks:
       - id: flake8
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.0
-    hooks:
-      - name: mypy
-        id: mypy
-        exclude: research
-        additional_dependencies:
-          - pydantic
-        args:
-          # mypy не распознает конфигурацию в pyproject.toml,
-          # в котором включена эта опция
-          - --allow-untyped-decorators
+        language_version: python3
 
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.0.1
     hooks:
       - id: autoflake
-        additional_dependencies: [toml]
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.21.0
@@ -77,6 +73,7 @@ repos:
     rev: v1.10.0
     hooks:
       - id: python-use-type-annotations
+      - id: python-check-mock-methods
       - id: python-check-blanket-noqa
 
   - repo: https://github.com/Yelp/detect-secrets
@@ -85,6 +82,24 @@ repos:
       - id: detect-secrets
         args: [filename, .env]
         exclude: .env.example
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.0
+    hooks:
+      - name: mypy
+        id: mypy
+        exclude: ^research/|^elk/
+        additional_dependencies:
+          - pydantic
+        args:
+          [
+            --disallow-untyped-defs,
+            --check-untyped-defs,
+            --warn-redundant-casts,
+            --no-implicit-optional,
+            --strict-optional
+          ]
+
 
 # run check
 # pre-commit install

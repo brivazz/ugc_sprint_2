@@ -10,9 +10,9 @@ from loguru import logger  # type: ignore
 app = FastAPI()
 
 logger.add(
-    "/var/log/file.log",
-    format="{message}",
-    rotation="500 MB",
+    '/var/log/file.log',
+    format='{message}',
+    rotation='500 MB',
 )
 
 
@@ -24,17 +24,17 @@ def generate_log_message() -> dict[str, Any]:
         dict: Словарь лога.
     """
     timestamp = datetime.datetime.now(datetime.UTC).isoformat(  # type: ignore
-        timespec="milliseconds",
-        sep=" ",
+        timespec='milliseconds',
+        sep=' ',
     )
-    message = "This is a sample log message"
-    log_message = {"@timestamp": timestamp, "message": message}
+    message = 'This is a sample log message'
+    log_message = {'@timestamp': timestamp, 'message': message}
     logger.info(log_message)
 
     return log_message
 
 
-@app.get("/")
+@app.get('/')
 async def write_log_file() -> dict[str, Any]:
     """
     Записывает файл лога в каталог.

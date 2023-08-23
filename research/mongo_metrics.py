@@ -11,7 +11,7 @@ def measure_execution_time(func):
         result = func(*args, **kwargs)
         end_time = time.time()
         execution_time = end_time - start_time
-        print(f"Execution time for {func.__name__}: {execution_time:.6f} seconds")
+        print(f'Execution time for {func.__name__}: {execution_time:.6f} seconds')
         return result
 
     return wrapper
@@ -36,7 +36,7 @@ def measure_likes_count():
 
     @measure_execution_time
     def count_likes():
-        pipeline = [{"$group": {"_id": "$film_id", "likes_count": {"$sum": 1}}}]
+        pipeline = [{'$group': {'_id': '$film_id', 'likes_count': {'$sum': 1}}}]
         result = collection.aggregate(pipeline)
         return list(result)
 
@@ -51,11 +51,11 @@ def measure_average_rating(film_id):
     @measure_execution_time
     def calculate_average_rating():
         pipeline = [
-            {"$match": {"film_id": film_id}},
-            {"$group": {"_id": None, "average_rating": {"$avg": "$rating"}}},
+            {'$match': {'film_id': film_id}},
+            {'$group': {'_id': None, 'average_rating': {'$avg': '$rating'}}},
         ]
         result = list(collection.aggregate(pipeline))
-        return result[0]["average_rating"] if result else 0
+        return result[0]['average_rating'] if result else 0
 
     return calculate_average_rating()
 
@@ -67,7 +67,7 @@ def view_bookmarks_for_user(user_id):
 
     @measure_execution_time
     def get_user_bookmarks():
-        return list(collection.find({"user_id": user_id}))
+        return list(collection.find({'user_id': user_id}))
 
     return get_user_bookmarks()
 
@@ -88,7 +88,7 @@ def main():
     measure_write_speed(mongo_cfg.bookmarks_collection, bookmarks_dicts)
 
     likes_count_result = measure_likes_count()
-    print("Likes count for each movie:")
+    print('Likes count for each movie:')
     print(likes_count_result)
 
     film_id = user_film_ratings[0].film_id
@@ -101,5 +101,5 @@ def main():
     print(user_bookmarks)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,4 +1,4 @@
-"""Файл создания подключения к MongoDB и создание коллекций."""
+"""Файл создания подключения/отключения к MongoDB и создание коллекций."""
 
 from core.config import settings
 from loguru import logger

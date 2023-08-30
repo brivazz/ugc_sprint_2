@@ -41,7 +41,9 @@ repos:
           [
             flake8-broken-line,
             flake8-bugbear,
+            flake8-commas,
             flake8-comprehensions,
+            flake8-debugger,
             flake8-docstrings,
             flake8-eradicate,
             flake8-string-format,
@@ -113,6 +115,7 @@ repos:
           - pydantic
         args:
           [
+            --config-file=./setup.cfg,
             --disallow-untyped-defs,
             --check-untyped-defs,
             --warn-redundant-casts,

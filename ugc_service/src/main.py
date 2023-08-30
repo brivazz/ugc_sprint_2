@@ -1,3 +1,5 @@
+"""Точка входа в приложение."""
+
 import fastapi
 import sentry_sdk
 from api.v1 import film_bookmarks, film_reviews, film_score
@@ -17,6 +19,7 @@ sentry_sdk.init(
 
 
 def init_app() -> fastapi.FastAPI:
+    """Инициализирует экземпляр FastAPI."""
     return fastapi.FastAPI(
         title=settings.project_name,
         docs_url='/api/v1/ugc_2/openapi',
@@ -31,12 +34,14 @@ app = init_app()
 
 @app.on_event('startup')
 async def startup() -> None:
+    """Выполняет необходимые действия при запуске приложения."""
     logger.info('Fastapi service launched.')
     await mongo_storage.on_startup([f'{settings.mongo_host}:{settings.mongo_port}'])
 
 
 @app.on_event('shutdown')
 async def shutdown() -> None:
+    """Выполняет необходимые действия при остановке приложения."""
     mongo_storage.on_shutdown()
 
 

@@ -1,12 +1,14 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
+---
+
 repos:
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.32.0
     hooks:
       - id: yamllint
-        args: [-c=.yamllint]
+        args: [-c=.yamllint.yaml]
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.10.1
@@ -25,14 +27,31 @@ repos:
     hooks:
       - id: black
         exclude: ^.*\b(migrations)\b.*$
-        args: ["--skip-string-normalization"]
+        args: ["--skip-string-normalization"]  # Игнорирует одинарные кавычки
 
   - repo: https://github.com/pycqa/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
         language_version: python3
+        exclude: ^research/|^elk/
+        args: [--config=setup.cfg]
         files: .
+        additional_dependencies:
+          [
+            flake8-broken-line,
+            flake8-bugbear,
+            flake8-comprehensions,
+            flake8-docstrings,
+            flake8-eradicate,
+            flake8-string-format,
+          ]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.0
+    hooks:
+      - id: bandit
+        exclude: ^research/|^elk/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0

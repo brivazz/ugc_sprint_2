@@ -46,14 +46,14 @@ jobs:
         continue-on-error: true
         with:
           name: flake-report
-          path: flake-report/
+          path: flake8-report/
 
       - name: Run MyPy
         id: run_mypy
         if: ${{ matrix.python-version >= 3.10 }}
         run: |
             mkdir mypy-report && \
-            mypy --config-file ../../setup.cfg \
+            mypy --config-file ./setup.cfg \
             --exclude "^elk/main\.py$" \
             --exclude "^research/" \
             --show-error-codes \

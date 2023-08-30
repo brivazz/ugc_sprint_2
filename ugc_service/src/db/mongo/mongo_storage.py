@@ -1,3 +1,5 @@
+"""Файл создания подключения к MongoDB и создание коллекций."""
+
 from core.config import settings
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,10 +11,11 @@ mongo_client: AsyncIOMotorClient | None = None
 
 
 async def on_startup(data_storage_hosts: list[str]) -> None:
-    global mongo_client
+    """Выполняет необходимые операции при запуске приложения."""
+    global mongo_client  # flake8: noqa
     try:
         mongo_client = AsyncIOMotorClient(
-            data_storage_hosts  # , username=settings.mongo_username, password=settings.mongo_password
+            data_storage_hosts,  # , username=settings.mongo_username, password=settings.mongo_password
         )
         db = mongo_client[settings.mongo_db]
 
@@ -28,11 +31,16 @@ async def on_startup(data_storage_hosts: list[str]) -> None:
 
         mongo_rep.mongo_repository = mongo_rep.MongoRepository(mongo_client)
         logger.info('Connected to MongoDB successfully.')
-    except Exception as e:
-        logger.exception(f'Error connecting to MongoDB: {e}')
+    except Exception as er:
+        logger.exception(f'Error connecting to MongoDB: {er}')
 
 
 def on_shutdown() -> None:
+    """
+    Выполняет необходимые операции при завершении работы приложения.
+
+    Закрывает соединение с MongoDB, если оно было установлено.
+    """
     if mongo_client:
         mongo_client.close()
         logger.info('Disconnected from MongoDB.')

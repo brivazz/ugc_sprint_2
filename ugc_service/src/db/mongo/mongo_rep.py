@@ -23,11 +23,11 @@ class MongoRepository:
             result: InsertOneResult = await collection.insert_one(document)
             logger.info(f'Added to {collection_name}: {document}')
             return str(result.inserted_id)
-        except DuplicateKeyError as e:
-            logger.exception(f'Error when adding an entry to the collection {collection_name}: {e}')
-            raise e
-        except Exception as e:
-            logger.exception(f'Error when adding an entry to the collection {collection_name}: {e}')
+        except DuplicateKeyError as er:
+            logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
+            raise er
+        except Exception as er:
+            logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
             return None
 
     async def find_one(self, collection_name: str, query: dict[str, str]) -> dict[str, str] | None:
@@ -38,8 +38,8 @@ class MongoRepository:
             result: dict[str, str] = await collection.find_one(query)
             logger.info(f'One entrie in the {collection_name} found')
             return result
-        except Exception as e:
-            logger.exception(f'Error when searching for an entry in the {collection_name}: {e}')
+        except Exception as er:
+            logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
             return None
 
     async def find_all(
@@ -56,8 +56,8 @@ class MongoRepository:
             else:
                 result = collection.find(query)
             logger.info(f'Entries in the {collection_name} found')
-        except Exception as e:
-            logger.exception(f'Error when searching for an entry in the {collection_name}: {e}')
+        except Exception as er:
+            logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
             return []
         return await result.to_list(length=None)  # type: ignore[no-any-return]
 
@@ -77,8 +77,8 @@ class MongoRepository:
             else:
                 logger.warning('No entry matched the given query')
                 return None
-        except Exception as e:
-            logger.exception(f'Error updating a entry in the {collection_name}: {e}')
+        except Exception as er:
+            logger.exception(f'Error updating a entry in the {collection_name}: {er}')
             return None
 
     async def delete_one(self, collection_name: str, query: dict[str, str]) -> int | None:
@@ -88,8 +88,8 @@ class MongoRepository:
             collection = database[collection_name]
             result: DeleteResult = await collection.delete_one(query)
             logger.info(f'One entry was deleted from the {collection_name}')
-        except Exception as e:
-            logger.exception(f'Error when deleting an entry from a {collection_name}: {e}')
+        except Exception as er:
+            logger.exception(f'Error when deleting an entry from a {collection_name}: {er}')
             return None
         return result.deleted_count  # type: ignore[no-any-return]
 

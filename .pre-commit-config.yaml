@@ -29,13 +29,14 @@ repos:
         exclude: ^.*\b(migrations)\b.*$
         args: ["--skip-string-normalization"]  # Игнорирует одинарные кавычки
 
-  - repo: https://github.com/pycqa/flake8
+  - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
         language_version: python3
+        types: [python]
         exclude: ^research/|^elk/
-        args: [--config=setup.cfg]
+        args: ["--config=setup.cfg"]
         files: .
         additional_dependencies:
           [
@@ -47,6 +48,7 @@ repos:
             flake8-docstrings,
             flake8-eradicate,
             flake8-string-format,
+            wemake-python-styleguide,
           ]
 
   - repo: https://github.com/PyCQA/bandit

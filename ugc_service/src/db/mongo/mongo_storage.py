@@ -12,7 +12,7 @@ mongo_client: AsyncIOMotorClient | None = None
 
 async def on_startup(data_storage_hosts: list[str]) -> None:
     """Выполняет необходимые операции при запуске приложения."""
-    global mongo_client  # flake8: noqa
+    global mongo_client
     try:
         mongo_client = AsyncIOMotorClient(
             data_storage_hosts,  # , username=settings.mongo_username, password=settings.mongo_password

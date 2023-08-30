@@ -1,3 +1,5 @@
+"""Репозиторий для взаимодействия с MongoDB."""
+
 from core.config import settings
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCursor
@@ -7,6 +9,8 @@ from pymongo.errors import DuplicateKeyError
 
 
 class MongoRepository:
+    """Класс для взаимодействия с коллекциями MongoDB."""
+
     def __init__(self, db_client: AsyncIOMotorClient) -> None:
         """Инициализирует экземпляр класса MongoRepository."""
         self._mongo_client: AsyncIOMotorClient = db_client
@@ -43,7 +47,11 @@ class MongoRepository:
             return None
 
     async def find_all(
-        self, collection_name: str, query: dict[str, str], page_size: int | None = None, page_number: int | None = None
+        self,
+        collection_name: str,
+        query: dict[str, str],
+        page_size: int | None = None,
+        page_number: int | None = None,
     ) -> list[dict[str, str]] | None:
         """Поиск всех записей в коллекции по запросу."""
         try:
@@ -52,9 +60,9 @@ class MongoRepository:
 
             if page_size and page_number:
                 skip_count = (page_number - 1) * page_size
-                result: AsyncIOMotorCursor = collection.find(query).skip(skip_count).limit(page_size)  # flake8: noqa
+                result: AsyncIOMotorCursor = collection.find(query).skip(skip_count).limit(page_size)
             else:
-                result = collection.find(query)  # flake8: noqa
+                result = collection.find(query)
             logger.info(f'Entries in the {collection_name} found')
         except Exception as er:
             logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
@@ -62,14 +70,19 @@ class MongoRepository:
         return await result.to_list(length=None)  # type: ignore[no-any-return]
 
     async def update_one(
-        self, collection_name: str, query: dict[str, str], update_data: dict[str, str]
+        self,
+        collection_name: str,
+        query: dict[str, str],
+        update_data: dict[str, str],
     ) -> dict[str, str] | None:
         """Обновление одной записи в коллекции по запросу."""
         try:
             database = await self.get_database()
             collection = database[collection_name]
             update_result: UpdateResult = await collection.find_one_and_update(
-                query, {'$set': update_data}, return_document=ReturnDocument.AFTER
+                query,
+                {'$set': update_data},
+                return_document=ReturnDocument.AFTER,
             )
             if update_result.modified_count > 0:
                 logger.info(f'Entry in {collection_name} updated successfully')

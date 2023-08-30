@@ -27,6 +27,13 @@ repos:
         exclude: ^.*\b(migrations)\b.*$
         args: ["--skip-string-normalization"]
 
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        language_version: python3
+        files: .
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -52,20 +59,13 @@ repos:
       # Проверяет файлы Python на их валидность
       - id: check-ast
 
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        language_version: python3
-        files: .
-
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.0
     hooks:
       - id: autoflake
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.21.0
+    rev: 0.26.3
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
@@ -85,7 +85,7 @@ repos:
         exclude: .env.example
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.0
+    rev: v1.5.1
     hooks:
       - name: mypy
         id: mypy

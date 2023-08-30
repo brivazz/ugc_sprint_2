@@ -33,12 +33,14 @@ jobs:
 
       - name: Run Flake8
         id: run_linters
-        run: flake8
-              --config=setup.cfg
-              --exclude=research,elk/main.py
-              --show-source
-              --format=html
-              --htmldir=flake-report .
+        run: |
+          cd ugc_sprint_2
+          flake8 \
+            --config="./setup.cfg" \
+            --exclude="^research/,^elk/main\.py$" \
+            --show-source \
+            --format=html \
+            --htmldir=flake8-report .
         continue-on-error: true
 
       - name: Save flake8 HTML report
@@ -52,7 +54,7 @@ jobs:
         id: run_mypy
         if: ${{ matrix.python-version }} >= '3.10'
         run: |
-            mkdir mypy-report
+            mkdir mypy-report \
             mypy --config-file ./setup.cfg \
             --exclude "^elk/main\.py$" \
             --exclude "^research/" \

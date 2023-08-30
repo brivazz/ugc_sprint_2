@@ -20,9 +20,9 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            result: InsertOneResult = await collection.insert_one(document)
+            insert_one_result: InsertOneResult = await collection.insert_one(document)
             logger.info(f'Added to {collection_name}: {document}')
-            return str(result.inserted_id)
+            return str(insert_one_result.inserted_id)
         except DuplicateKeyError as er:
             logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
             raise er
@@ -35,9 +35,9 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            result: dict[str, str] = await collection.find_one(query)
+            find_one_result: dict[str, str] = await collection.find_one(query)
             logger.info(f'One entrie in the {collection_name} found')
-            return result
+            return find_one_result
         except Exception as er:
             logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
             return None
@@ -52,9 +52,9 @@ class MongoRepository:
 
             if page_size and page_number:
                 skip_count = (page_number - 1) * page_size
-                result: AsyncIOMotorCursor = collection.find(query).skip(skip_count).limit(page_size)
+                result: AsyncIOMotorCursor = collection.find(query).skip(skip_count).limit(page_size)  # flake8: noqa
             else:
-                result = collection.find(query)
+                result = collection.find(query)  # flake8: noqa
             logger.info(f'Entries in the {collection_name} found')
         except Exception as er:
             logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
@@ -68,15 +68,15 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            result: UpdateResult = await collection.find_one_and_update(
+            update_result: UpdateResult = await collection.find_one_and_update(
                 query, {'$set': update_data}, return_document=ReturnDocument.AFTER
             )
-            if result.modified_count > 0:
+            if update_result.modified_count > 0:
                 logger.info(f'Entry in {collection_name} updated successfully')
-                return result  # type: ignore[no-any-return]
-            else:
-                logger.warning('No entry matched the given query')
-                return None
+                return update_result  # type: ignore[no-any-return]
+
+            logger.warning('No entry matched the given query')
+            return None
         except Exception as er:
             logger.exception(f'Error updating a entry in the {collection_name}: {er}')
             return None
@@ -86,16 +86,17 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            result: DeleteResult = await collection.delete_one(query)
+            delete_result: DeleteResult = await collection.delete_one(query)
             logger.info(f'One entry was deleted from the {collection_name}')
         except Exception as er:
             logger.exception(f'Error when deleting an entry from a {collection_name}: {er}')
             return None
-        return result.deleted_count  # type: ignore[no-any-return]
+        return delete_result.deleted_count  # type: ignore[no-any-return]
 
 
 mongo_repository: MongoRepository | None = None
 
 
 def get_mongo_repository() -> MongoRepository | None:
+    """Возвращает объект MongoRepository или None."""
     return mongo_repository

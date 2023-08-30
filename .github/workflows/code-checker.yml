@@ -34,10 +34,10 @@ jobs:
       - name: Run Flake8
         id: run_linters
         run: flake8
-            --config="./setup.cfg" \
-            --exclude=research/,elk/main.py \
-            --show-source \
-            --format=html \
+            --config="./setup.cfg"
+            --exclude=research/,elk/main.py
+            --show-source
+            --format=html
             --htmldir=flake8-report .
         continue-on-error: true
 

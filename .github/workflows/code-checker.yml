@@ -2,8 +2,8 @@ name: UGC_service_2
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
   pull_request:
     branches:
       - main

@@ -1,29 +1,17 @@
-# Из-за того, что mypy ругается на
-# error: Class cannot subclass "BaseModel" (has type "Any")  [misc]
-# из-за новой версии pydantic v2, игнор всего файла
-
-# mypy: ignore-errors
-
 """Модуль для взаимодействия пользователя с закладками фильмов."""
 
 from uuid import UUID
 
 from api.utils.extensions import is_authenticated
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from pydantic import BaseModel
 from services.film_bookmarks import BookmarksService, get_bookmark_service
+from utils.response_models import FilmFormBookmarks
 
 router = APIRouter()
 
 
-class FilmFormBookmarks(BaseModel):
-    """Тип ответа пользователю."""
-
-    film_id: UUID
-
-
 @router.get('/', response_model=list[FilmFormBookmarks])
-async def get_film_bookmarks(
+async def get_film_bookmarks(  # type: ignore[no-untyped-def]
     token_sub=Depends(is_authenticated),
     bookmark_service: BookmarksService = Depends(get_bookmark_service),
 ) -> list[FilmFormBookmarks] | dict[str, str]:
@@ -36,7 +24,7 @@ async def get_film_bookmarks(
 
 
 @router.post('/{film_id}')
-async def add_film_to_bookmark(
+async def add_film_to_bookmark(  # type: ignore[no-untyped-def]
     film_id: UUID,
     token_sub=Depends(is_authenticated),
     bookmark_service: BookmarksService = Depends(get_bookmark_service),
@@ -46,11 +34,11 @@ async def add_film_to_bookmark(
     result = await bookmark_service.add_film_to_bookmarks(film_id, user_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='entry not added')
-    return Response(status_code=status.HTTP_201_CREATED, content='Ok')
+    return Response(status_code=status.HTTP_201_CREATED, content='Ok')  # type: ignore[no-any-return]
 
 
 @router.delete('/{film_id}')
-async def delete_film_from_bookmark(
+async def delete_film_from_bookmark(  # type: ignore[no-untyped-def]
     film_id: UUID,
     token_sub=Depends(is_authenticated),
     bookmark_service: BookmarksService = Depends(get_bookmark_service),
@@ -60,4 +48,4 @@ async def delete_film_from_bookmark(
     result = await bookmark_service.delete_film_from_bookmarks(film_id, user_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='bookmarks not found')
-    return Response(status_code=status.HTTP_200_OK, content='Ok')
+    return Response(status_code=status.HTTP_200_OK, content='Ok')  # type: ignore[no-any-return]

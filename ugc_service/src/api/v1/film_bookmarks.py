@@ -3,9 +3,9 @@
 from uuid import UUID
 
 from api.utils.extensions import is_authenticated
+from api.utils.response_models import FilmFormBookmarks
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from services.film_bookmarks import BookmarksService, get_bookmark_service
-from utils.response_models import FilmFormBookmarks
 
 router = APIRouter()
 

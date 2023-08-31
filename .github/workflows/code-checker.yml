@@ -55,7 +55,7 @@ jobs:
             mypy --config-file ./setup.cfg \
             --exclude "^elk/main\.py$" \
             --exclude "^research/" \
-            --no-strict-optional \
+            --no-error-summary \
             --show-error-codes \
             --html-report mypy-report .
         continue-on-error: true

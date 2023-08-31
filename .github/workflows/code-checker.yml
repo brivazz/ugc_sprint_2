@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v3
         continue-on-error: true
         with:
-          name: flake-report
+          name: flake-report_${{ matrix.python-version }}
           path: flake8-report/
 
       - name: Run MyPy

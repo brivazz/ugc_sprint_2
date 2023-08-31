@@ -16,11 +16,12 @@ class BookmarksService:
         self._mongo_repository = mongo_repository
         self.collection_name = 'film_bookmarks'
 
-    async def get_bookmark_films(self, user_id: UUID) -> list[UUID]:
+    async def get_bookmark_films(self, user_id: UUID) -> list[dict[str, UUID]] | None:
         """Возвращает список id фильмов, добавленных пользователем в закладки."""
         films_bookmarks = await self._mongo_repository.find_all(self.collection_name, {'user_id': user_id})
-
-        return [film_obj.get('film_id') for film_obj in films_bookmarks]
+        if films_bookmarks:
+            return [film_obj.get('film_id') for film_obj in films_bookmarks]
+        return None
 
     async def add_film_to_bookmarks(self, film_id: UUID, user_id: UUID) -> str | None:
         """Добавляет фильм в закладки."""

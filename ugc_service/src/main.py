@@ -10,7 +10,7 @@ from sentry_sdk.integrations.loguru import LoguruIntegration
 from db.mongo import mongo_storage  # type: ignore[attr-defined]
 
 sentry_sdk.init(
-    dsn=settings.sentry_url,
+    dsn=settings.sentry_dsn,
     traces_sample_rate=1.0,
     integrations=[
         LoguruIntegration(),

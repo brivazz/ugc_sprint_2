@@ -4,8 +4,7 @@ from core.config import settings
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCursor
 from pymongo import ReturnDocument
-from pymongo.collection import DeleteResult, InsertOneResult, UpdateResult
-from pymongo.errors import DuplicateKeyError
+from pymongo.collection import InsertOneResult, UpdateResult
 
 
 class MongoRepository:
@@ -24,12 +23,12 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
+            if await self.find_one(collection_name, document):
+                logger.exception(f'Entry for user: {document["user_id"]} in the {collection_name}: already exists')
+                return None
             insert_one_result: InsertOneResult = await collection.insert_one(document)
-            logger.info(f'Added to {collection_name}: {document}')
+            logger.info(f'User: {document["user_id"]} added an entry to the collection: {collection_name}')
             return str(insert_one_result.inserted_id)
-        except DuplicateKeyError as er:
-            logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
-            raise er
         except Exception as er:
             logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
             return None
@@ -39,9 +38,9 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            find_one_result: dict[str, str] = await collection.find_one(query)
-            logger.info(f'One entrie in the {collection_name} found')
-            return find_one_result
+            if find_one_result := await collection.find_one(query):
+                return find_one_result  # type: ignore[no-any-return]
+            return None
         except Exception as er:
             logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
             return None
@@ -63,11 +62,17 @@ class MongoRepository:
                 result: AsyncIOMotorCursor = collection.find(query).skip(skip_count).limit(page_size)
             else:
                 result = collection.find(query)
-            logger.info(f'Entries in the {collection_name} found')
+            entries = await result.to_list(length=None)
         except Exception as er:
-            logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
-            return []
-        return await result.to_list(length=None)  # type: ignore[no-any-return]
+            logger.exception(f'Error when searching for an entry in the collection: {collection_name}: {er}')
+            return None
+        if entries:
+            logger.info(
+                f'Entries for User: {query["user_id"]} in the collection: {collection_name} found {len(entries)}',
+            )
+            return entries  # type: ignore[no-any-return]
+        logger.info(f'Entries for user: {query["user_id"]} in the collection: {collection_name} not found')
+        return None  # type: ignore[no-any-return]
 
     async def update_one(
         self,
@@ -85,13 +90,13 @@ class MongoRepository:
                 return_document=ReturnDocument.AFTER,
             )
             if update_result.modified_count > 0:
-                logger.info(f'Entry in {collection_name} updated successfully')
+                logger.info(f'Entry in the collection: {collection_name} updated successfully')
                 return update_result  # type: ignore[no-any-return]
 
             logger.warning('No entry matched the given query')
             return None
         except Exception as er:
-            logger.exception(f'Error updating a entry in the {collection_name}: {er}')
+            logger.exception(f'Error updating a entry in the collection: {collection_name}: {er}')
             return None
 
     async def delete_one(self, collection_name: str, query: dict[str, str]) -> int | None:
@@ -99,12 +104,15 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            delete_result: DeleteResult = await collection.delete_one(query)
-            logger.info(f'One entry was deleted from the {collection_name}')
-        except Exception as er:
-            logger.exception(f'Error when deleting an entry from a {collection_name}: {er}')
+            if await self.find_one(collection_name, query):
+                delete_result = await collection.delete_one(query)
+                logger.info(f'User: {query["user_id"]} an entry was deleted from the collection: {collection_name}')
+                return delete_result.deleted_count  # type: ignore[no-any-return]
+            logger.info(f'Entry for User: {query["user_id"]} in the collection: {collection_name} not found')
             return None
-        return delete_result.deleted_count  # type: ignore[no-any-return]
+        except Exception as er:
+            logger.exception(f'Error when deleting an entry from a collection: {collection_name}: {er}')
+            return None
 
 
 mongo_repository: MongoRepository | None = None

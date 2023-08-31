@@ -36,7 +36,6 @@ jobs:
         run: flake8
             --config=setup.cfg
             --exclude=research/,elk/main.py
-            --show-source
             --format=html
             --htmldir=flake8-report .
         continue-on-error: true
@@ -64,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v3
         continue-on-error: true
         with:
-          name: mypy-report
+          name: mypy-report_${{ matrix.python-version }}
           path: mypy-report/
 
       - name: Fail if errors found

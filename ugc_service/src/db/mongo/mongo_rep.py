@@ -38,9 +38,8 @@ class MongoRepository:
         try:
             database = await self.get_database()
             collection = database[collection_name]
-            if find_one_result := await collection.find_one(query):
-                return find_one_result  # type: ignore[no-any-return]
-            return None
+            find_one_result = await collection.find_one(query)
+            return find_one_result or None
         except Exception as er:
             logger.exception(f'Error when searching for an entry in the {collection_name}: {er}')
             return None

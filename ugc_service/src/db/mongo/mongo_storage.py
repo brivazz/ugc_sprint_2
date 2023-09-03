@@ -27,7 +27,7 @@ async def on_startup(data_storage_hosts: list[str]) -> None:
             collection.create_index([('film_id', 1), ('user_id', 1)], unique=True)
         if 'film_reviews' not in await db.list_collection_names():
             collection = db['film_reviews']
-            collection.create_index([('film_id', 1)])
+            collection.create_index([('film_id', 1), ('user_id', 1)], unique=True)
 
         mongo_rep.mongo_repository = mongo_rep.MongoRepository(mongo_client)
         logger.info('Connected to MongoDB successfully.')

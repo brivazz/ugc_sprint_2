@@ -1,4 +1,4 @@
-"""Сервис для работы с закладками фильмов."""
+"""Модуль сервиса для работы с закладками фильмов."""
 
 from functools import lru_cache
 from uuid import UUID

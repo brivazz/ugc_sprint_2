@@ -13,44 +13,44 @@ from pydantic import BaseModel, Field
 
 
 class FilmFormBookmarks(BaseModel):
-    """Модель ответа пользователю закладка фильма."""
+    """Модель для добавления закладки фильма."""
 
     film_id: uuid.UUID
 
 
 class FilmReviewResponse(BaseModel):
-    """Модель ответа пользователю о рецензии и оценки фильма."""
+    """Модель ответа пользователю о рецензии и оценке фильма."""
 
-    review_id: uuid.UUID
+    review_id: str
     user_id: uuid.UUID
-    film_score: float
-    text: str
+    review_text: str
+    film_score: float | None = Field(..., ge=0, le=10)
     create_at: datetime.datetime
     update_at: datetime.datetime
 
 
 class FilmReviewRequest(BaseModel):
-    """Модель отзыва и оценки фильма."""
+    """Модель для добавления отзыва и оценки фильма."""
 
-    film_score: float
     review_text: str
+    film_score: float = Field(..., ge=0, le=10)
 
 
 class ReviewUpdate(BaseModel):
-    """Модель обновления отзыва и оценки фильма."""
+    """Модель для обновления отзыва и оценки фильма."""
 
-    review_text: str | None
-    film_score: float | None
+    review_text: str
+    film_score: float = Field(..., ge=0, le=10)
 
 
 class FilmAverageScore(BaseModel):
-    """Модель средней оценки фильма."""
+    """Модель ответа пользователю средней оценки фильма."""
 
     average_film_score: float
 
 
 class FilmScore(BaseModel):
-    """Модель оценки фильма."""
+    """Модель для добавления оценки фильма."""
 
     film_id: uuid.UUID
     film_score: float = Field(..., ge=0, le=10)

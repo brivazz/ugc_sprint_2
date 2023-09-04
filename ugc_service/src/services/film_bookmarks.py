@@ -12,7 +12,7 @@ class BookmarksService:
     """Сервис для работы с закладками фильмов в MongoDB."""
 
     def __init__(self, mongo_repository: MongoRepository) -> None:
-        """Инициализирует сервис закладок фильмов с указанным репозиторием MongoDB."""
+        """Инициализирует сервис закладок фильмов."""
         self._mongo_repository = mongo_repository
         self.collection_name = 'film_bookmarks'
 
@@ -27,7 +27,7 @@ class BookmarksService:
         """Добавляет фильм в закладки."""
         try:
             return await self._mongo_repository.insert_one(  # type: ignore[no-any-return]
-                'film_bookmarks',
+                self.collection_name,
                 {'film_id': str(film_id), 'user_id': str(user_id)},
             )
         except DuplicateKeyError as er:

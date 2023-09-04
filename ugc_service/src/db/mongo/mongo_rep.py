@@ -20,8 +20,6 @@ class MongoRepository:
 
     async def insert_one(self, collection_name: str, document: dict[str, str]) -> str | None:
         """Добавление одной записи в коллекцию."""
-        if 'film_score' in document:
-            await self.insert_or_update_if_film_score_in_document(document)
         try:
             database = await self.get_database()
             collection = database[collection_name]
@@ -34,34 +32,6 @@ class MongoRepository:
         except Exception as er:
             logger.exception(f'Error when adding an entry to the collection {collection_name}: {er}')
             return None
-
-    async def insert_or_update_if_film_score_in_document(
-        self,
-        doc: dict[str, str],
-        update_data: dict[str, str] | None = None,
-    ) -> None:
-        """Вставить/обновить оценку фильма в коллекции film_score, при создании/редактировании отзыва о фильме."""
-        try:
-            database = await self.get_database()
-            collection = database['film_score']
-            if update_data:
-                review = await self.find_one('film_reviews', {'_id': doc['_id']})
-                await self.update_one(
-                    'film_score',
-                    {'film_id': str(review['film_id']), 'user_id': str(review['user_id'])},  # type: ignore[index]
-                    {'film_score': update_data['film_score']},
-                )
-                return
-            if await self.find_one('film_score', {'film_id': str(doc['film_id']), 'user_id': str(doc['user_id'])}):
-                return
-            insert_one_result: InsertOneResult = await collection.insert_one(
-                {'film_id': str(doc['film_id']), 'user_id': str(doc['user_id']), 'film_score': str(doc['film_score'])},
-            )
-            logger.info(
-                f"User: {doc['user_id']} added an entry: {insert_one_result.inserted_id} to collection: film_score",
-            )
-        except Exception as er:
-            logger.exception(f'Error: {er}')
 
     async def find_one(self, collection_name: str, query: dict[str, str]) -> dict[str, str] | None:
         """Поиск одной записи в коллекции по запросу."""
@@ -110,8 +80,6 @@ class MongoRepository:
     ) -> dict[str, str] | None:
         """Обновление одной записи в коллекции по запросу."""
         try:
-            if 'review_text' in update_data:
-                await self.insert_or_update_if_film_score_in_document(query, update_data)
             database = await self.get_database()
             collection = database[collection_name]
             update_result: UpdateResult = await collection.find_one_and_update(

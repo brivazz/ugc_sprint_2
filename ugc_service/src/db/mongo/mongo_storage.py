@@ -1,10 +1,9 @@
 """Файл создания подключения/отключения к MongoDB и создание коллекций."""
 
 from core.config import settings
+from db.mongo import mongo_rep  # type: ignore[attr-defined]
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient
-
-from db.mongo import mongo_rep  # type: ignore[attr-defined]
 
 # MongoDB client
 mongo_client: AsyncIOMotorClient | None = None

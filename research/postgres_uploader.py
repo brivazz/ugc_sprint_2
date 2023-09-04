@@ -72,9 +72,9 @@ def insert_data_into_table(table_name, data: list[dict]):
     cursor = conn.cursor()
 
     for item in data:
-        columns = ", ".join(item.keys())
-        placeholders = ", ".join(["%s"] * len(item))
-        query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        columns = ', '.join(item.keys())
+        placeholders = ', '.join(['%s'] * len(item))
+        query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
         cursor.execute(query, tuple(item.values()))
 
     conn.commit()
@@ -92,13 +92,13 @@ def get_table_counts():
     )
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.film_ratings_table}")
+    cursor.execute(f'SELECT COUNT(*) FROM {postgres_cfg.film_ratings_table}')
     user_film_ratings_count = cursor.fetchone()[0]
 
-    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.reviews_table}")
+    cursor.execute(f'SELECT COUNT(*) FROM {postgres_cfg.reviews_table}')
     reviews_count = cursor.fetchone()[0]
 
-    cursor.execute(f"SELECT COUNT(*) FROM {postgres_cfg.bookmarks_table}")
+    cursor.execute(f'SELECT COUNT(*) FROM {postgres_cfg.bookmarks_table}')
     bookmarks_count = cursor.fetchone()[0]
 
     cursor.close()
@@ -111,21 +111,21 @@ def user_film_insert(num):
     user_film_ratings = create_film_ratings(num)
     for counter, batch in enumerate(create_batch(user_film_ratings, postgres_cfg.batch_size), start=1):
         insert_data_into_table(postgres_cfg.film_ratings_table, [item.__dict__ for item in batch])
-        print(postgres_cfg.batch_size * counter, "rows inserted")
+        print(postgres_cfg.batch_size * counter, 'rows inserted')
 
 
 def reviews_insert(num):
     reviews = create_reviews(num)
     for counter, batch in enumerate(create_batch(reviews, postgres_cfg.batch_size), start=1):
         insert_data_into_table(postgres_cfg.reviews_table, [item.__dict__ for item in batch])
-        print(postgres_cfg.batch_size * counter, "rows inserted")
+        print(postgres_cfg.batch_size * counter, 'rows inserted')
 
 
 def bookmarks_insert(num):
     bookmarks = create_bookmarks(num)
     for counter, batch in enumerate(create_batch(bookmarks, postgres_cfg.batch_size), start=1):
         insert_data_into_table(postgres_cfg.bookmarks_table, [item.__dict__ for item in batch])
-        print(postgres_cfg.batch_size * counter, "rows inserted")
+        print(postgres_cfg.batch_size * counter, 'rows inserted')
 
 
 def main():
@@ -134,13 +134,13 @@ def main():
     create_tables()
 
     user_film_insert(num_elements)
-    print(f"Data is inserted to table {postgres_cfg.film_ratings_table}")
+    print(f'Data is inserted to table {postgres_cfg.film_ratings_table}')
 
     reviews_insert(num_elements)
-    print(f"Data is inserted to table {postgres_cfg.reviews_table}")
+    print(f'Data is inserted to table {postgres_cfg.reviews_table}')
 
     bookmarks_insert(num_elements)
-    print(f"Data is inserted to table {postgres_cfg.bookmarks_table}")
+    print(f'Data is inserted to table {postgres_cfg.bookmarks_table}')
 
     print(f"{20 * '='}\nData insertion completed successfully!")
 
@@ -150,5 +150,5 @@ def main():
     print(f"Table '{postgres_cfg.bookmarks_table}' count: {bookmarks_count}")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

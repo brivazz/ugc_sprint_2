@@ -6,20 +6,20 @@ from pydantic import BaseModel  # type: ignore
 
 
 class PostgresConfig(BaseModel):
-    PG_HOST: str = "localhost"
+    PG_HOST: str = 'localhost'
     PG_PORT: int = 5433
-    PG_DATABASE: str = "test_database"
-    PG_USER: str = "app"
-    PG_PASSWORD: str = "123qwe"
+    PG_DATABASE: str = 'test_database'
+    PG_USER: str = 'app'
+    PG_PASSWORD: str = '123qwe'
 
     class Config:
-        env_file = ".env"
-        env_prefix = "POSTGRES_"
+        env_file = '.env'
+        env_prefix = 'POSTGRES_'
 
 
-USER_FILM_RATINGS_TABLE = "ratings"
-REVIEWS_TABLE = "reviews"
-BOOKMARKS_TABLE = "bookmarks"
+USER_FILM_RATINGS_TABLE = 'ratings'
+REVIEWS_TABLE = 'reviews'
+BOOKMARKS_TABLE = 'bookmarks'
 
 
 def measure_execution_time(func):
@@ -28,7 +28,7 @@ def measure_execution_time(func):
         result = func(*args, **kwargs)
         end_time = time.time()
         execution_time = end_time - start_time
-        print(f"Execution time for {func.__name__}: {execution_time:.6f} seconds")
+        print(f'Execution time for {func.__name__}: {execution_time:.6f} seconds')
         return result
 
     return wrapper
@@ -77,9 +77,9 @@ def create_tables(conn):
 def insert_data_into_table(conn, table_name, data: list[dict]):
     cursor = conn.cursor()
 
-    columns = ", ".join(data[0].keys())
-    placeholders = ", ".join(["%s"] * len(data[0]))
-    query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+    columns = ', '.join(data[0].keys())
+    placeholders = ', '.join(['%s'] * len(data[0]))
+    query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
 
     values = [tuple(item.values()) for item in data]
 
@@ -96,9 +96,9 @@ def measure_write_speed(conn, table_name, data):
 
     @measure_execution_time
     def insert_data():
-        columns = ", ".join(data[0].keys())
-        placeholders = ", ".join(["%s"] * len(data[0]))
-        query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        columns = ', '.join(data[0].keys())
+        placeholders = ', '.join(['%s'] * len(data[0]))
+        query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
         values = [tuple(item.values()) for item in data]
         cursor.executemany(query, values)
         conn.commit()
@@ -192,7 +192,7 @@ def main():
 
     film_id = user_film_ratings[0].film_id
     likes_count_result = measure_likes_count(conn, film_id)
-    print("Likes count for each movie:")
+    print('Likes count for each movie:')
     print(likes_count_result)
 
     film_id = user_film_ratings[0].film_id
@@ -207,5 +207,5 @@ def main():
     conn.close()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

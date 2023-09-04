@@ -1,4 +1,4 @@
-python-logstash==0.4.8
 fastapi==0.61.1
-uvicorn==0.12.2
 loguru==0.7.0
+python-logstash==0.4.8
+uvicorn==0.12.2

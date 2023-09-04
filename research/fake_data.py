@@ -54,7 +54,7 @@ def create_reviews(num_elements):
         yield Review(
             user_id=generate_uuid(),
             film_id=generate_uuid(),
-            text="This movie is great!",
+            text='This movie is great!',
             date_created=generate_timestamp(),
         )
 

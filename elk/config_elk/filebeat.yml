@@ -1,3 +1,5 @@
+---
+
 filebeat.inputs:
   - type: filestream
     id: nginx_filestream_access
@@ -5,12 +7,14 @@ filebeat.inputs:
       - nginx/access.log
     fields:
       log_type: nginx_access
+
   - type: filestream
     id: nginx_filestream_error
     paths:
       - nginx/error.log
     fields:
       log_type: nginx_error
+
   - type: filestream
     id: fastapi_filestream
     paths:

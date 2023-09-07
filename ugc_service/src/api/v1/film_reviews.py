@@ -1,6 +1,7 @@
 """Модуль для взаимодействия пользователя с отзывами фильмов."""
 
 import datetime
+import json
 import typing
 import uuid
 
@@ -47,7 +48,11 @@ async def add_film_review(
     )
     if result is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review is not add.')
-    return Response(status_code=status.HTTP_201_CREATED, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_201_CREATED,
+        content=json.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )
 
 
 @router.delete('/{review_id}')
@@ -61,7 +66,11 @@ async def delete_film_review(
     result = await film_review_service.delete_review(user_id=user_id, review_id=review_id)
     if result is None or result == 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review not delete')
-    return Response(status_code=status.HTTP_200_OK, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_200_OK,
+        content=json.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )
 
 
 @router.patch('/{review_id}', response_model=FilmReviewResponse)

@@ -1,10 +1,10 @@
 """Модуль для взаимодействия пользователя с отзывами фильмов."""
 
 import datetime
-import json
 import typing
 import uuid
 
+import orjson
 from api.utils.extensions import PaginateQueryParams, is_authenticated
 from api.utils.response_models import FilmReviewRequest, FilmReviewResponse, ReviewUpdate
 from fastapi import APIRouter, Body, Depends, HTTPException, Response, status
@@ -50,7 +50,7 @@ async def add_film_review(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review is not add.')
     return Response(  # type: ignore[no-any-return]
         status_code=status.HTTP_201_CREATED,
-        content=json.dumps({'message': 'Ok'}),
+        content=orjson.dumps({'message': 'Ok'}),
         media_type='application/json',
     )
 
@@ -68,7 +68,7 @@ async def delete_film_review(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review not delete')
     return Response(  # type: ignore[no-any-return]
         status_code=status.HTTP_200_OK,
-        content=json.dumps({'message': 'Ok'}),
+        content=orjson.dumps({'message': 'Ok'}),
         media_type='application/json',
     )
 

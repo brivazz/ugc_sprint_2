@@ -1,9 +1,9 @@
 """Модуль для взаимодействия пользователя с закладками фильмов."""
 
-import json
 import typing
 import uuid
 
+import orjson
 from api.utils.extensions import is_authenticated
 from api.utils.response_models import FilmFormBookmarks
 from fastapi import APIRouter, Depends, HTTPException, Response, status
@@ -20,7 +20,7 @@ async def get_film_bookmarks(
     """Возвращает закладки фильмов пользователя."""
     user_id: uuid.UUID = uuid.UUID(token_sub.get('user_id'))
     films_ids = await bookmark_service.get_bookmark_films(user_id)
-    if films_ids is None:
+    if not films_ids:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='bookmarks not found')
     return [FilmFormBookmarks(film_id=film_id) for film_id in films_ids]
 
@@ -35,10 +35,10 @@ async def add_film_to_bookmark(
     user_id: uuid.UUID = uuid.UUID(token_sub.get('user_id'))
     result = await bookmark_service.add_film_to_bookmarks(film_id, user_id)
     if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='entry not added')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='entry not added')
     return Response(  # type: ignore[no-any-return]
         status_code=status.HTTP_201_CREATED,
-        content=json.dumps({'message': 'Ok'}),
+        content=orjson.dumps({'message': 'Ok'}),
         media_type='application/json',
     )
 
@@ -56,6 +56,6 @@ async def delete_film_from_bookmark(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='bookmarks not found')
     return Response(  # type: ignore[no-any-return]
         status_code=status.HTTP_200_OK,
-        content=json.dumps({'message': 'Ok'}),
+        content=orjson.dumps({'message': 'Ok'}),
         media_type='application/json',
     )

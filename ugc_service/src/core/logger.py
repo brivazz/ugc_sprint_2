@@ -9,8 +9,8 @@ from core.config import settings
 from loguru import logger
 
 logs_dir: Path = Path(settings.base_dir).resolve().parent.parent
-log_file_path = Path.joinpath(logs_dir, 'logs/fastapi/access.log')
-err_log_file_path = Path.joinpath(logs_dir, 'logs/fastapi/errors.log')
+log_file_path = Path.joinpath(logs_dir, '/var/log/access.log')
+err_log_file_path = Path.joinpath(logs_dir, '/var/log/errors.log')
 
 
 def serialize(record: dict[str, typing.Any]) -> str:

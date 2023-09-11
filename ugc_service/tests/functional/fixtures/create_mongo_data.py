@@ -14,11 +14,7 @@ COLLECTION_NAMES = [
 
 @pytest.fixture(scope='session')
 async def mongo_client():
-    client = motor.motor_asyncio.AsyncIOMotorClient(
-        [f'{settings_test.mongo_host}:{settings_test.mongo_port}'],
-        # username=settings_test.mongo_username,
-        # password=settings_test.mongo_password,
-    )
+    client = motor.motor_asyncio.AsyncIOMotorClient([f'{settings_test.mongo_host}:{settings_test.mongo_port}'])
     yield client
     await client.close()
 

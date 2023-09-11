@@ -10,7 +10,7 @@ from sentry_sdk.integrations.loguru import LoguruIntegration
 
 sentry_sdk.init(
     dsn=settings.sentry_dsn,  # type: ignore
-    traces_sample_rate=1.0,
+    traces_sample_rate=settings.sentry_traces_sample_rate,
     integrations=[
         LoguruIntegration(),
     ],

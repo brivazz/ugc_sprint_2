@@ -3,12 +3,12 @@
 # из-за новой версии pydantic v2, игнор всего файла
 
 # mypy: ignore-errors
-"""Модуль Конфигурации приложения UGC."""
+"""Модуль Конфигурации тестов для приложения UGC2."""
 
 from pathlib import Path
 
 from dotenv import load_dotenv
-from pydantic import Field, MongoDsn
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 load_dotenv()
@@ -25,17 +25,9 @@ class Settings(BaseSettings):
     service_url: str = Field('http://127.0.0.1:8000')
     auth_url: str = Field('http://nginx/api/v1/auth')
 
-    # mongo_db: str = Field('ugc2_movies', env='MONGO_DB')
     mongo_db: str = Field('ugc2_movies')
-    # mongo_username: str = Field('root')
-    # mongo_password: str = Field('example')
-    # mongo_host: str = Field('localhost')
-    # mongo_port: int = Field(27017)
-
-    mongo_dsn: MongoDsn = 'mongodb://root:example@localhost:27017/'
+    mongo_host: str = Field('localhost')
+    mongo_port: int = Field(27017)
 
 
 settings_test = Settings()
-import pprint
-
-pprint.pprint(Settings().model_dump())

@@ -16,11 +16,18 @@ filebeat.inputs:
       log_type: nginx_error
 
   - type: filestream
-    id: fastapi_filestream
+    id: fastapi_filestream_access
     paths:
-      - fastapi/*.log
+      - fastapi/access.log
     fields:
-      log_type: fastapi
+      log_type: fastapi_access
+
+  - type: filestream
+    id: fastapi_filestream_errors
+    paths:
+      - fastapi/errors.log
+    fields:
+      log_type: fastapi_errors
 
 filebeat.autodiscover:
   providers:

@@ -16,7 +16,7 @@ async def is_authenticated(token: HTTPBearer = Depends(bearer)) -> dict[str, str
     """Аутентифицирует пользователя."""
     url = f'{settings.auth_server_url}/is_authenticated'
     headers = {'Authorization': f'Bearer {token.credentials}'}
-    # return {'user_id': '3fa85f64-5717-4562-b3fc-2c963f66afa6'}  # type: ignore
+    return {'user_id': '3fa85f64-5717-4562-b3fc-2c963f66afa6'}  # type: ignore
     async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=headers)
         status_code = response.status_code

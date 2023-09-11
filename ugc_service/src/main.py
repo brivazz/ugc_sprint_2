@@ -1,20 +1,22 @@
 """Точка входа в приложение."""
 
 import fastapi
-import sentry_sdk
+
+# import sentry_sdk
 from api.v1 import film_bookmarks, film_reviews, film_score
 from core.config import settings
 from core.logger import logger
 from db.mongo import mongo_storage  # type: ignore[attr-defined]
-from sentry_sdk.integrations.loguru import LoguruIntegration
 
-sentry_sdk.init(
-    # dsn=settings.sentry_dsn,  # type: ignore
-    traces_sample_rate=1.0,
-    integrations=[
-        LoguruIntegration(),
-    ],
-)
+# from sentry_sdk.integrations.loguru import LoguruIntegration
+
+# sentry_sdk.init(
+#     # dsn=settings.sentry_dsn,  # type: ignore
+#     traces_sample_rate=1.0,
+#     integrations=[
+#         LoguruIntegration(),
+#     ],
+# )
 
 
 def init_app() -> fastapi.FastAPI:

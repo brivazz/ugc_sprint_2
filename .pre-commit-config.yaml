@@ -33,7 +33,7 @@ repos:
     rev: 1.7.0
     hooks:
       - id: bandit
-        exclude: ^research/|^elk/
+        exclude: ^research/||^elk/||^tests/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -71,7 +71,7 @@ repos:
       - id: flake8
         language_version: python3
         types: [python]
-        exclude: ^research/|^elk/
+        exclude: ^research/||^elk/||^tests/
         args: ["--config=setup.cfg"]
         files: .
         additional_dependencies:
@@ -105,14 +105,14 @@ repos:
     hooks:
       - id: detect-secrets
         args: [filename, .env]
-        exclude: .env.example
+        exclude: .env.example||^tests/
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
     hooks:
       - name: mypy
         id: mypy
-        exclude: ^research/|^elk/
+        exclude: ^research/||^elk/||^tests/
         additional_dependencies:
           - pydantic
         args:

@@ -46,7 +46,7 @@ async def add_film_review(
         film_score=film_review_request.film_score,
         create_at=datetime.datetime.now(),
     )
-    if result is None:
+    if not result:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review is not add.')
     return Response(  # type: ignore[no-any-return]
         status_code=status.HTTP_201_CREATED,

@@ -35,7 +35,7 @@ jobs:
         id: run_linters
         run: flake8
             --config=setup.cfg
-            --exclude=research/,elk/main.py,tests/
+            --exclude=research/,elk/main.py,ugc_service/tests/
             --format=html
             --htmldir=flake8-report .
         continue-on-error: true
@@ -55,7 +55,7 @@ jobs:
             mypy --config-file ./setup.cfg \
             --exclude "^elk/main\.py$" \
             --exclude "^research/" \
-            --exclude "^tests/" \
+            --exclude "^ugc_service/tests/" \
             --show-error-codes \
             --html-report mypy-report .
         continue-on-error: true

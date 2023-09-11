@@ -65,11 +65,12 @@ class FilmReviewsService:
         new_film_score: float | None,
     ) -> dict[str, str] | None:
         """Редактирует озыв и оценку фильма."""
-        result = existing_film_review = await self._mongo_repository.find_one(
+        result = None
+        existing_film_review = await self._mongo_repository.find_one(
             self.collection_name,
             {'_id': bson.ObjectId(review_id), 'user_id': str(user_id)},
         )
-        if result:
+        if existing_film_review:
             result = await self._mongo_repository.update_one(
                 self.collection_name,
                 existing_film_review,

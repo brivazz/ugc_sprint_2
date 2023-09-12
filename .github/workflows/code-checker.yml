@@ -72,18 +72,18 @@ jobs:
         id: run_docker_compose
         run: |
             touch ./ugc_service/tests/functional/.env
-            echo "${{ vars.ENV_FILE_CONTENT }}" > ugс_service/tests/functional/.env
-            docker-compose -f ./ugс_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
+            echo "${{ vars.ENV_FILE_CONTENT }}" > ./ugc_service/tests/functional/.env
+            docker-compose -f ./ugc_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
         continue-on-error: true
 
       - name: Run  Pytest
         id: run_pytest
-        run: docker-compose -f ./ugс_service/tests/functional/docker-compose.yml up --build tests
+        run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml up --build tests
         continue-on-error: true
 
       - name: Stop Docker compose
         id: stop_docker_compose
-        run: docker-compose -f ./ugс_service/tests/functional/docker-compose.yml down
+        run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml down
         continue-on-error: true
 
       - name: Fail if errors found

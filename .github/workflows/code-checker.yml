@@ -98,7 +98,7 @@ jobs:
             exit 1
           fi
 
-          if [ "${{ steps.run_pytest.outcome }}" == "tests exited with code 1" ]; then
+          if [ "${{ steps.run_pytest.outcome }}" == "1" ]; then
             echo "Pytest errors found. Exiting with error."
             exit 1
           fi

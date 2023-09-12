@@ -88,9 +88,15 @@ jobs:
 
       - name: Fail if test errors found
         run: |
-          EXIT_CODE=$(docker wait tests)
-          if [ "$EXIT_CODE" == "1" ]; then
-            echo "Test errors found. Exiting with error."
+          CONTAINER_ID=$(docker ps -aqf "name=tests")
+          if [ -n "$CONTAINER_ID" ]; then
+            EXIT_CODE=$(docker wait $CONTAINER_ID)
+            if [ "$EXIT_CODE" == "1" ]; then
+              echo "Test errors found. Exiting with error."
+              exit 1
+            fi
+          else
+            echo "Failed to find the test container. Exiting with error."
             exit 1
           fi
 

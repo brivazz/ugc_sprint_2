@@ -71,7 +71,7 @@ repos:
       - id: flake8
         language_version: python3
         types: [python]
-        exclude: (^research/|elk/|tests/)
+        exclude: (^research/|elk/|tests/|ugc_service/src/api/utils/extensions\.py)
         args: ["--config=setup.cfg"]
         files: .
         additional_dependencies:

@@ -86,20 +86,6 @@ jobs:
         run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml down
         continue-on-error: true
 
-      - name: Fail if test errors found
-        run: |
-          CONTAINER_ID=$(docker ps -aqf "name=tests")
-          if [ -n "$CONTAINER_ID" ]; then
-            EXIT_CODE=$(docker wait $CONTAINER_ID)
-            if [ "$EXIT_CODE" == "1" ]; then
-              echo "Test errors found. Exiting with error."
-              exit 1
-            fi
-          else
-            echo "Failed to find the test container. Exiting with error."
-            exit 1
-          fi
-
       - name: Fail if errors found
         run: |
           if [ "${{ steps.run_linters.outcome }}" == "failure" ]; then
@@ -109,6 +95,11 @@ jobs:
 
           if [ "${{ steps.run_mypy.outcome }}" == "failure" ]; then
             echo "MyPy errors found. Exiting with error."
+            exit 1
+          fi
+
+          if [ "${{ steps.run_pytest.outcome }}" == "tests exited with code 1" ]; then
+            echo "Pytest errors found. Exiting with error."
             exit 1
           fi
 

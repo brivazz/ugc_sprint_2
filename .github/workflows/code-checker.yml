@@ -65,19 +65,19 @@ jobs:
         id: run_docker_compose
         run: |
           mkdir -p ugc_sprint_2/ugs_service/tests/functional
-          touch ./ugs_service/tests/functional/.env
+          touch ugc_sprint_2/ugs_service/tests/functional/.env
           echo "${{ vars.ENV_FILE_CONTENT }}" > ugs_service/tests/functional/.env
-          docker-compose -f ./ugs_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
+          docker-compose -f ugc_sprint_2/ugs_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
         continue-on-error: true
 
       - name: Run  Pytest
         id: run_pytest
-        run: docker-compose -f ./ugs_service/tests/functional/docker-compose.yml up --build tests
+        run: docker-compose -f ugc_sprint_2/ugs_service/tests/functional/docker-compose.yml up --build tests
         continue-on-error: true
 
       - name: Stop Docker compose
         id: stop_docker_compose
-        run: docker-compose -f ./ugs_service/tests/functional/docker-compose.yml down
+        run: docker-compose -f ugc_sprint_2/ugs_service/tests/functional/docker-compose.yml down
         continue-on-error: true
 
       - name: Save mypy HTML report

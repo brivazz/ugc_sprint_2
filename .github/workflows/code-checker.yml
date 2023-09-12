@@ -81,11 +81,6 @@ jobs:
         run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml up --build tests
         continue-on-error: true
 
-      - name: Stop Docker compose
-        id: stop_docker_compose
-        run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml down
-        continue-on-error: true
-
       - name: Fail if test errors found
         run: |
           CONTAINER_ID=$(docker ps -aqf "name=tests")
@@ -96,6 +91,11 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Stop Docker compose
+        id: stop_docker_compose
+        run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml down
+        continue-on-error: true
 
       - name: Fail if errors found
         run: |

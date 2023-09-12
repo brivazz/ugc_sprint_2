@@ -65,7 +65,7 @@ jobs:
       - name: Save mypy HTML report
         uses: actions/upload-artifact@v3
         continue-on-error: true
-        if: ${{ matrix.python-version }} != '3.9' && ${{ steps.run_mypy.outcome == 'failure' }}
+        if: ${{ matrix.python-version }} == '3.10' && ${{ steps.run_mypy.outcome == 'failure' }}
         with:
           name: mypy-report_${{ matrix.python-version }}
           path: mypy-report/

@@ -61,12 +61,19 @@ jobs:
             --html-report mypy-report .
         continue-on-error: true
 
+      - name: Save mypy HTML report
+        uses: actions/upload-artifact@v3
+        continue-on-error: true
+        with:
+          name: mypy-report_${{ matrix.python-version }}
+          path: mypy-report/
+
       - name: Run  Docker Compose
         id: run_docker_compose
         run: |
-          touch ugs_service/tests/functional/.env
-          echo "${{ vars.ENV_FILE_CONTENT }}" > ugs_service/tests/functional/.env
-          docker-compose -f ugs_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
+            touch "./ugs_service/tests/functional/.env"
+            echo "${{ vars.ENV_FILE_CONTENT }}" > ugs_service/tests/functional/.env
+            docker-compose -f ./ugs_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
         continue-on-error: true
 
       - name: Run  Pytest
@@ -78,13 +85,6 @@ jobs:
         id: stop_docker_compose
         run: docker-compose -f ./ugs_service/tests/functional/docker-compose.yml down
         continue-on-error: true
-
-      - name: Save mypy HTML report
-        uses: actions/upload-artifact@v3
-        continue-on-error: true
-        with:
-          name: mypy-report_${{ matrix.python-version }}
-          path: mypy-report/
 
       - name: Fail if errors found
         run: |

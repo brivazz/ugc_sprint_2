@@ -98,6 +98,11 @@ jobs:
             exit 1
           fi
 
+          if [ "${{ steps.run_pytest.outcome }}" == "failure" ]; then
+            echo "Test errors found. Exiting with error."
+            exit 1
+          fi
+
       - name: Telegram Notification
         if: ${{ job.status }} == success || cancelled() == false
         uses: appleboy/telegram-action@master

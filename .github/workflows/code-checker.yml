@@ -36,7 +36,7 @@ jobs:
         id: run_linters
         run: flake8
             --config=setup.cfg
-            --exclude=research/,elk/main.py,ugc_service/tests/,ugc_service/src/api/utils/extensions.py
+            --exclude=research/,elk/main.py,ugc_service/tests/,ugc_service/src/api/utils/
             --format=html
             --htmldir=flake8-report .
         continue-on-error: true

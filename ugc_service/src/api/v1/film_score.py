@@ -3,6 +3,7 @@
 import typing
 import uuid
 
+import orjson
 from api.utils.extensions import is_authenticated
 from api.utils.response_models import FilmAverageScore, FilmScore
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Response, status
@@ -34,7 +35,11 @@ async def add_film_score(
     result = await score_service.add_score(film_score.film_id, user_id, film_score.film_score)
     if not result:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='error when adding a record')
-    return Response(status_code=status.HTTP_201_CREATED, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_201_CREATED,
+        content=orjson.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )
 
 
 @router.delete('/{film_id}')
@@ -48,4 +53,8 @@ async def delete_film_score(
     result = await score_service.delete_score(film_id, user_id)
     if result is None or result == 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='error deleting a record')
-    return Response(status_code=status.HTTP_200_OK, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_200_OK,
+        content=orjson.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )

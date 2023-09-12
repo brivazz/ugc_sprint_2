@@ -18,7 +18,7 @@ class BookmarksService:
 
     async def get_bookmark_films(self, user_id: UUID) -> list[dict[str, UUID]] | None:
         """Возвращает список id фильмов, добавленных пользователем в закладки."""
-        films_bookmarks = await self._mongo_repository.find_all(self.collection_name, {'user_id': user_id})
+        films_bookmarks = await self._mongo_repository.find_all(self.collection_name, {'user_id': str(user_id)})
         if films_bookmarks:
             return [film_obj.get('film_id') for film_obj in films_bookmarks]
         return None

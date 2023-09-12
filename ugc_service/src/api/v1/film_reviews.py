@@ -4,6 +4,7 @@ import datetime
 import typing
 import uuid
 
+import orjson
 from api.utils.extensions import PaginateQueryParams, is_authenticated
 from api.utils.response_models import FilmReviewRequest, FilmReviewResponse, ReviewUpdate
 from fastapi import APIRouter, Body, Depends, HTTPException, Response, status
@@ -45,9 +46,13 @@ async def add_film_review(
         film_score=film_review_request.film_score,
         create_at=datetime.datetime.now(),
     )
-    if result is None:
+    if not result:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review is not add.')
-    return Response(status_code=status.HTTP_201_CREATED, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_201_CREATED,
+        content=orjson.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )
 
 
 @router.delete('/{review_id}')
@@ -61,7 +66,11 @@ async def delete_film_review(
     result = await film_review_service.delete_review(user_id=user_id, review_id=review_id)
     if result is None or result == 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Review not delete')
-    return Response(status_code=status.HTTP_200_OK, content='Ok')  # type: ignore[no-any-return]
+    return Response(  # type: ignore[no-any-return]
+        status_code=status.HTTP_200_OK,
+        content=orjson.dumps({'message': 'Ok'}),
+        media_type='application/json',
+    )
 
 
 @router.patch('/{review_id}', response_model=FilmReviewResponse)

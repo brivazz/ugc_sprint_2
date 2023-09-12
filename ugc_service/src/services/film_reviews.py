@@ -65,21 +65,23 @@ class FilmReviewsService:
         new_film_score: float | None,
     ) -> dict[str, str] | None:
         """Редактирует озыв и оценку фильма."""
+        result = None
         existing_film_review = await self._mongo_repository.find_one(
             self.collection_name,
             {'_id': bson.ObjectId(review_id), 'user_id': str(user_id)},
         )
-        result = await self._mongo_repository.update_one(
-            self.collection_name,
-            existing_film_review,
-            {
-                'update_at': datetime.datetime.now()
-                if new_review_text or new_film_score
-                else existing_film_review['update_at'],
-                'review_text': new_review_text or existing_film_review['review_text'],
-                'film_score': new_film_score or existing_film_review['film_score'],
-            },
-        )
+        if existing_film_review:
+            result = await self._mongo_repository.update_one(
+                self.collection_name,
+                existing_film_review,
+                {
+                    'update_at': datetime.datetime.now()
+                    if new_review_text or new_film_score
+                    else existing_film_review['update_at'],
+                    'review_text': new_review_text or existing_film_review['review_text'],
+                    'film_score': new_film_score or existing_film_review['film_score'],
+                },
+            )
         if new_film_score and result:
             await self._mongo_repository.update_one(
                 'film_score',
@@ -92,7 +94,7 @@ class FilmReviewsService:
         """Удаляет отзыв о фильме."""
         return await self._mongo_repository.delete_one(  # type: ignore[no-any-return]
             self.collection_name,
-            {'_id': bson.ObjectId(review_id), 'user_id': user_id},
+            {'_id': bson.ObjectId(review_id), 'user_id': str(user_id)},
         )
 
     async def get_reviews_for_film(

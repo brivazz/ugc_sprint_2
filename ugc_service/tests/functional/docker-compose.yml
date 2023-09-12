@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  test_app:
+    build: ../../.
+    container_name: test_app
+    env_file:
+      - .env
+    ports:
+      - ${UGC_2_API_PORT}:${UGC_2_API_PORT}
+    depends_on:
+      mongo_test:
+        condition: service_healthy
+
+  mongo_test:
+    image: mongo:${MONGO_VERSION}
+    restart: unless-stopped
+    container_name: mongo_test
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+
+  tests:
+    container_name: tests
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      - test_app

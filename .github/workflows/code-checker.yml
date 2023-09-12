@@ -76,12 +76,12 @@ jobs:
             docker-compose -f ./ugc_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
         continue-on-error: true
 
-      - name: Run  Pytest
+      - name: Run Pytest
         id: run_pytest
         run: docker-compose -f ./ugc_service/tests/functional/docker-compose.yml up --build tests
         continue-on-error: true
 
-      - name: Fail if test errors found
+      - name: Fail if pytest errors found
         run: |
           CONTAINER_ID=$(docker ps -aqf "name=tests")
           if [ -n "$CONTAINER_ID" ]; then

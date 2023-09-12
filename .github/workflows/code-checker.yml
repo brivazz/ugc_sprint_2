@@ -64,8 +64,7 @@ jobs:
       - name: Run  Docker Compose
         id: run_docker_compose
         run: |
-          cd ugs_service/tests/functional
-          touch .env
+          touch ugc_sprint_2/ugs_service/tests/functional/.env
           echo "${{ vars.ENV_FILE_CONTENT }}" > ugs_service/tests/functional/.env
           docker-compose -f ./ugs_service/tests/functional/docker-compose.yml up -d --build test_app mongo_test
         continue-on-error: true

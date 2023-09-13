@@ -19,6 +19,14 @@ log_dir: Path = Path(base_dir).resolve().parent
 log_file_path = Path.joinpath(log_dir, 'logs/fastapi/access.log')
 err_log_file_path = Path.joinpath(log_dir, 'logs/fastapi/errors.log')
 
+# logger.remove()
+# logger.add(
+#     # '/var/log/file.log',
+#     'debug.log',
+#     format=formatter,
+#     rotation='500 MB',
+# )
+
 
 def serialize(record: dict) -> dict[str, str]:
     subset = {
@@ -61,15 +69,6 @@ loguru_config = {
 }
 # logger.remove()
 logger.configure(**loguru_config)
-
-
-# logger.remove()
-# logger.add(
-#     # '/var/log/file.log',
-#     'debug.log',
-#     format=formatter,
-#     rotation='500 MB',
-# )
 
 
 def generate_log_message() -> dict[str, Any]:
